@@ -13,10 +13,14 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
     ConfigModule.forRoot(),
     MongooseModule.forRootAsync({
       imports: [ConfigModule],
-      useFactory: async (configService: ConfigService) => ({
-        uri: configService.get<string>('MONGO_URI'),
-      }),
       inject: [ConfigService],
+      useFactory: async (configService: ConfigService) => {
+        const mongoUri = configService.get<string>('MONGO_URI');
+        console.log('Mongo URI:', mongoUri);
+        return {
+          uri: mongoUri, // La connexion avec la bonne base de données
+        };
+      },
     }),
   ],
   controllers: [AppController],

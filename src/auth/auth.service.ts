@@ -21,7 +21,14 @@ export class AuthService {
 
     const hashedPassword = await bcrypt.hash(password, 12);
 
-    const newUser = new this.userModel({ firstName, lastName, email, hashedPassword });
+    const newUser = new this.userModel({
+      firstName,
+      lastName,
+      email,
+      password: hashedPassword,
+      createdAt: new Date(),
+    });
+
     return newUser.save();
   }
 }

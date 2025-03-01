@@ -29,4 +29,12 @@ export class UsersService {
   async findOne(email: string, password: string): Promise<User | null> {
     return this.userModel.findOne({ email, password }).exec();
   }
+
+  async deleteUserByEmail(email: string): Promise<{ message: string }> {
+    const user = await this.userModel.findOneAndDelete({ email });
+    if (!user) {
+      throw new Error('User not found');
+    }
+    return { message: 'User deleted successfully' };
+  }
 }
