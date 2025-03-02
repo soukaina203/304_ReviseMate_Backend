@@ -16,7 +16,6 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
       inject: [ConfigService],
       useFactory: async (configService: ConfigService) => {
         const mongoUri = configService.get<string>('MONGO_URI');
-        //console.log('Mongo URI:', mongoUri);
         return {
           uri: mongoUri, // La connexion avec la bonne base de données
         };

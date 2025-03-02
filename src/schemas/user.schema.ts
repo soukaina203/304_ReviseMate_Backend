@@ -1,8 +1,9 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 
-export type UserDocument = User & Document;
+//export type UserDocument = User & Document;
 
+// Schema definition for the User model. | Définition du schéma pour le modèle User.
 @Schema({ collection: 'utilisateur' })
 export class User extends Document {
   @Prop({ required: true })
@@ -24,4 +25,5 @@ export class User extends Document {
   updatedAt: Date;
 }
 
+// Export the User schema. | Exporter le schéma User.
 export const UserSchema = SchemaFactory.createForClass(User);
