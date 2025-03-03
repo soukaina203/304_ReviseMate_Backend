@@ -1,9 +1,21 @@
 import { NestFactory } from '@nestjs/core';
+import * as session from 'express-session';
 import { AppModule } from './app.module';
 import * as process from 'node:process';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+
+  // configuration de la session | session configuration
+  app.use(
+    session({
+      secret: 'S3cr3tK3y!2025',
+      resave: false,
+      saveUninitialized: false,
+      cookie: { secure: false, httpOnly: true },
+    })
+  );
+  
   // connexion vers le frontend | connection to the frontend
   app.enableCors({
     origin: 'http://localhost:4200/',
@@ -12,5 +24,6 @@ async function bootstrap() {
   const port = process.env.PORT ?? 3000;
   await app.listen(port);
   console.log(`Serveur lancé sur http://localhost:${port}`);
+
 }
 bootstrap();
