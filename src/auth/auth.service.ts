@@ -1,9 +1,11 @@
 import { Injectable, BadRequestException } from '@nestjs/common';
+import { UnauthorizedException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import * as bcrypt from 'bcrypt';
 import { User } from '../schemas/user.schema';
 import { RegisterDto } from './dto/register.dto';
+import { LoginDto } from './dto/login.dto';
 
 @Injectable()
 export class AuthService {
@@ -47,4 +49,26 @@ export class AuthService {
 
     return newUser.save();
   }
+
+  async login(email: string, password: string) {
+    // Recherche l'utilisateur dans la base de données par email
+    const user = await this.userModel.findOne({ email }).exec();
+    
+    // Vérifie si l'utilisateur existe
+    if (!user) {
+      return null; // Utilisateur non trouvé
+    }
+
+    // Vérifie si le mot de passe est correct
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+    
+    if (!isPasswordValid) {
+      return null; // Mot de passe incorrect
+    }
+
+    return user; // Utilisateur trouvé et mot de passe valide
+  }
+
+    
 }
+
