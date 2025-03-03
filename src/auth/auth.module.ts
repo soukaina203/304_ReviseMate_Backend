@@ -5,8 +5,7 @@ import { AuthController } from './auth.controller';
 import { User, UserSchema } from '../schemas/user.schema';
 
 @Module({
-  // Add the MongooseModule.forFeature() method to the imports array to import the User model.
-  // Pour importer le modèle User, on ajoute la méthode MongooseModule.forFeature() au tableau des imports.
+  // Add the MongooseModule.forFeature() method to the imports array to import the User model. | Pour importer le modèle User, on ajoute la méthode MongooseModule.forFeature() au tableau des imports.
   imports: [
     MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
   ],

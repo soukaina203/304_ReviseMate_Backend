@@ -25,19 +25,19 @@ export class AuthController {
   async login(@Body() loginDto: LoginDto, @Req() req: Request) {
     // Extraire les informations de l'objet loginDto
     const { email, password } = loginDto;
-    
+
     // Vérifie si l'utilisateur existe
     const user = await this.authService.login(email, password);
     if (!user) {
       return { message: 'Identifiants incorrects' };
     }
-  
-    // Vérifie si la session est bien active | Check if the session is active
+
+    // Check if the session is active | Vérifie si la session est bien active
     if (!req.session) {
-      return { message: 'La session n\'est pas active.' };
+      return { message: "La session n'est pas active." };
     }
-  
-    // Enregistrer l'utilisateur en session
+
+    // Register the user in session  | Enregistrer l'utilisateur en session
     req.session.user = { id: user.id, email: user.email };
     return { message: 'Connexion réussie', user: req.session.user };
   }

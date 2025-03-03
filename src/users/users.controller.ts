@@ -1,8 +1,7 @@
 import { Controller, Get, Delete, Param } from '@nestjs/common';
 import { UsersService } from './users.service';
 
-// Add the @Controller() decorator to the UsersController class.
-// Ajouter le décorateur @Controller() à la classe UsersController.
+// Add the @Controller() decorator to the UsersController class. | Ajouter le décorateur @Controller() à la classe UsersController.
 @Controller('users')
 
 // Add the UsersController class. | Ajouter la classe UsersController.

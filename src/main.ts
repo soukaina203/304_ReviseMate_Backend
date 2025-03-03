@@ -13,9 +13,9 @@ async function bootstrap() {
       resave: false,
       saveUninitialized: false,
       cookie: { secure: false, httpOnly: true },
-    })
+    }),
   );
-  
+
   // connexion vers le frontend | connection to the frontend
   app.enableCors({
     origin: 'http://localhost:4200/',
@@ -24,6 +24,5 @@ async function bootstrap() {
   const port = process.env.PORT ?? 3000;
   await app.listen(port);
   console.log(`Serveur lancé sur http://localhost:${port}`);
-
 }
 bootstrap();

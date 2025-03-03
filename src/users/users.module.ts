@@ -4,8 +4,7 @@ import { UsersService } from './users.service';
 import { UsersController } from './users.controller';
 import { User, UserSchema } from '../schemas/user.schema';
 
-// Add the MongooseModule.forFeature() method to the imports array to import the User model.
-// Pour importer le modèle User, on ajoute la méthode MongooseModule.forFeature() au tableau des imports.
+// Add the MongooseModule.forFeature() method to the imports array to import the User model. | Pour importer le modèle User, on ajoute la méthode MongooseModule.forFeature() au tableau des imports.
 @Module({
   // Add the MongooseModule.forFeature() method to the imports array to import the User model. | Pour importer le modèle User, on ajoute la méthode MongooseModule.forFeature() au tableau des imports.
   imports: [
