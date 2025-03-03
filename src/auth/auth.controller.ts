@@ -32,16 +32,16 @@ export class AuthController {
       return { message: 'Identifiants incorrects' };
     }
   
-    // Vérifie si la session est bien initialisée
+    // Vérifie si la session est bien active | Check if the session is active
     if (!req.session) {
-      return { message: 'La session n\'est pas initialisée.' };
+      return { message: 'La session n\'est pas active.' };
     }
   
     // Enregistrer l'utilisateur en session
     req.session.user = { id: user.id, email: user.email };
     return { message: 'Connexion réussie', user: req.session.user };
   }
-  
+
   // Add the logout() method to the AuthController class. | Ajouter la méthode logout() à la classe AuthController.
   @Post('logout')
   logout(@Req() req: Request) {
