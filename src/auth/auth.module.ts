@@ -3,11 +3,15 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
 import { User, UserSchema } from '../schemas/user.schema';
+import { Code_prof, CodeProfSchema } from '../schemas/code_prof.schema';
 
 @Module({
   // Add the MongooseModule.forFeature() method to the imports array to import the User model. | Pour importer le modèle User, on ajoute la méthode MongooseModule.forFeature() au tableau des imports.
   imports: [
-    MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
+    MongooseModule.forFeature([
+      { name: User.name, schema: UserSchema },
+      { name: Code_prof.name, schema: CodeProfSchema },
+    ]),
   ],
   controllers: [AuthController], // Add the AuthController to the controllers array.| Ajouter AuthController au tableau des contrôleurs.
   providers: [AuthService], // Add the AuthService to the providers array.| Ajouter AuthService au tableau des fournisseurs.
