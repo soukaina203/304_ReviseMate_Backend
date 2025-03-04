@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { Controller, Post, Body, Req } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { RegisterDto } from './dto/register.dto';
@@ -18,6 +19,18 @@ export class AuthController {
   async register(@Body() registerDto: RegisterDto) {
     // Call the register() method from the AuthService class. | Appeler la méthode register() de la classe AuthService.
     return this.authService.register(registerDto);
+  }
+
+  @Post('verifyCode')
+  // Méthode pour vérifier si le code est correct
+  private async isCodeValid(code: number): Promise<boolean> {
+    const firstUniversity = await this.authService.getProfCode();
+    
+    if (!firstUniversity) {
+      return false; // Aucune université trouvée
+    }
+
+    return firstUniversity.code === code; // Comparaison du code
   }
 
   // Add the login() method to the AuthController class. | Ajouter la méthode login() à la classe AuthController.
