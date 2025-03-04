@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { NestFactory } from '@nestjs/core';
 import * as session from 'express-session';
 import { AppModule } from './app.module';
@@ -18,9 +19,11 @@ async function bootstrap() {
 
   // connexion vers le frontend | connection to the frontend
   app.enableCors({
-    origin: 'http://localhost:4200/',
+    origin: '*',
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true,
   });
+
   const port = process.env.PORT ?? 3000;
   await app.listen(port);
   console.log(`Serveur lancé sur http://localhost:${port}`);
