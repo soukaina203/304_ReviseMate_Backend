@@ -32,17 +32,16 @@ export class AuthController {
     return { message: 'Inscription réussie', user: req.session.user };
   }
 
-
-  @Post('verifyCode')
   // Méthode pour vérifier si le code est correct
-  private async isCodeValid(code: number): Promise<boolean> {
-    const firstUniversity = await this.authService.getProfCode();
-    
-    if (!firstUniversity) {
-      return false; // Aucune université trouvée
-    }
+  @Post('verifyCode')
+  async verifyCode(@Body() { code }: { code: number }) {
+    const isValid = await this.authService.isCodeValid(code);
 
-    return firstUniversity.code === code; // Comparaison du code
+    if (isValid) {
+      return { message: 'Le code est correct.' };
+    } else {
+      return { message: 'Le code est incorrect.' };
+    }
   }
 
   
