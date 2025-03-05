@@ -5,11 +5,14 @@ import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { SuperModule } from './super/super.module';
+import { FicheModule } from './features/fiche/fiche.module';
 
 @Module({
   imports: [
     AuthModule,
     UsersModule,
+    SuperModule,
     ConfigModule.forRoot(),
     MongooseModule.forRootAsync({
       imports: [ConfigModule],
@@ -21,6 +24,8 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
         };
       },
     }),
+    /* Les CRUD */
+    FicheModule, // CRUD
   ],
   controllers: [AppController],
   providers: [AppService],
