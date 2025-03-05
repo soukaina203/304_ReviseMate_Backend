@@ -15,11 +15,23 @@ export class AuthController {
 
   // Add the register() method to the AuthController class. | Ajouter la méthode register() à la classe
   @Post('register')
-  // Add the @Body() decorator to the register() method. | Ajouter le décorateur @Body() à la méthode register().
-  async register(@Body() registerDto: RegisterDto) {
-    // Call the register() method from the AuthService class. | Appeler la méthode register() de la classe AuthService.
-    return this.authService.register(registerDto);
+  async register(@Body() registerDto: RegisterDto, @Req() req: Request) {
+    const user = await this.authService.register(registerDto);
+    //Vérifie si l'utilisateur existe déjà | Check if the user already exists
+    if (!user) {
+      return { message: 'Un compte existe déjà avec cette adresse mail.' };
+    }
+
+    // Vérifie si la session est active | Check if the session is active
+    if (!req.session) {
+      return { message: "La session n'est pas active." };
+    }
+
+    // Enregistrer l'utilisateur en session | Register the user in session
+    req.session.user = { id: user.id, email: user.email };
+    return { message: 'Inscription réussie', user: req.session.user };
   }
+
 
   @Post('verifyCode')
   // Méthode pour vérifier si le code est correct
@@ -33,6 +45,7 @@ export class AuthController {
     return firstUniversity.code === code; // Comparaison du code
   }
 
+  
   // Add the login() method to the AuthController class. | Ajouter la méthode login() à la classe AuthController.
   @Post('login')
   async login(@Body() loginDto: LoginDto, @Req() req: Request) {
