@@ -4,11 +4,11 @@ import { HydratedDocument } from 'mongoose';
 
 export type CodeProfDocument = HydratedDocument<Code_prof>;
 
-@Schema()
+@Schema({ collection: 'code_prof'})
 export class Code_prof {
-  @Prop({ required: true })
+  @Prop({ required: true, type: Number })
   code: number;
-
+  
   @Prop({ required: true })
   nom: string;
 }
