@@ -22,27 +22,26 @@ export class AuthService {
     return this.universityModel.findOne().sort({ _id: 1 }).exec(); // Fetch the first document
   }
 
-
+  async findUserByEmail(email: string): Promise<User | null> {
+    return await this.userModel.findOne({ email }).exec();
+  }
+  
 
   // Add the register() method to the AuthService class. | Ajouter la méthode register() à la classe AuthService.
-  async register(registerDto: RegisterDto): Promise<User> {
-    // Extract the firstName, lastName, email, and password from the registerDto object. | Extraire le firstName, lastName, email et password de l'objet registerDto.
+  async register(registerDto: RegisterDto): Promise<User | null> {
     const { firstName, lastName, email, password } = registerDto;
 
-    // Check if a user with the same email already exists. | Vérifier si un utilisateur avec le même email existe déjà.
+    // Vérifier si l'utilisateur existe déjà dans la base de données 
     const existingUser = await this.userModel.findOne({ email }).exec();
 
-    // If a user with the same email already exists, throw a BadRequestException. | Si un utilisateur avec le même email existe déjà, lancer une BadRequestException.
     if (existingUser) {
-      throw new BadRequestException(
-        'Un compte existe déjà avec cette adresse mail.',
-      );
+      return null; // Utilisateur déjà existant
     }
 
-    // Hash the password using the bcrypt library. | Hacher le mot de passe en utilisant la bibliothèque bcrypt.
+    // Hacher le mot de passe
     const hashedPassword = await bcrypt.hash(password, 12);
 
-    // Create a new user using the User model and the extracted values. | // Créer un nouvel utilisateur en utilisant le modèle User et les valeurs
+    // Créer un nouvel utilisateur
     const newUser = new this.userModel({
       firstName,
       lastName,
@@ -51,8 +50,10 @@ export class AuthService {
       createdAt: new Date(),
     });
 
-    return newUser.save();
+    // Sauvegarder l'utilisateur dans la base de données
+    return newUser.save(); // Retourne l'utilisateur créé
   }
+
 
   async login(email: string, password: string) {
     // Recherche l'utilisateur dans la base de données par email
