@@ -15,18 +15,24 @@ export class AuthService {
     @InjectModel(Code_prof.name) private universityModel: Model<CodeProfDocument>,
 ) {}
 
+  // Add the isCodeValid() method to the AuthService class. | Ajouter la méthode isCodeValid() à la classe
+  async isCodeValid(code: number): Promise<boolean> {
+    const firstUniversity = await this.universityModel.findOne().exec();
+    
+    if (!firstUniversity) {
+      return false; // Aucun code trouvé dans la base de données
+    }
 
+    // Conversion des deux codes en number
+    const dbCode = Number(firstUniversity.code);  // Conversion en number
+    const userCode = Number(code); // Conversion en number
 
-  // Fetch the first university document
-  async getProfCode(): Promise<Code_prof | null> {
-    return this.universityModel.findOne().sort({ _id: 1 }).exec(); // Fetch the first document
+    // Comparaison des deux codes
+    return dbCode === userCode;
   }
 
-  async findUserByEmail(email: string): Promise<User | null> {
-    return await this.userModel.findOne({ email }).exec();
-  }
   
-
+  
   // Add the register() method to the AuthService class. | Ajouter la méthode register() à la classe AuthService.
   async register(registerDto: RegisterDto): Promise<User | null> {
     const { firstName, lastName, email, password } = registerDto;
