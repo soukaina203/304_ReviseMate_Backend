@@ -7,6 +7,8 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { SuperModule } from './super/super.module';
 import { FicheModule } from './features/fiche/fiche.module';
+import { QuizModule } from './features/quiz/quiz.module';
+import { QuestionModule } from './features/question/question.module';
 
 @Module({
   imports: [
@@ -25,7 +27,9 @@ import { FicheModule } from './features/fiche/fiche.module';
       },
     }),
     /* Les CRUD */
-    FicheModule, // CRUD
+    FicheModule,
+    QuizModule,
+    QuestionModule, // CRUD
   ],
   controllers: [AppController],
   providers: [AppService],
