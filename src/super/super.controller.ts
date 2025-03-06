@@ -1,32 +1,48 @@
-import { Controller, Get, Post, Put, Delete, Param, Body } from '@nestjs/common';
+import { Controller, Get, Post, Put, Delete, Param, Body, Inject } from '@nestjs/common';
 import { SuperService } from './super.service';
+import { getModelToken } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
 
 @Controller('super/:name')
 export class SuperController<T> {
-  constructor(private readonly superService: SuperService<T>) {}
+  private model: Model<T>;
+
+  constructor(
+    @Inject(SuperService) private readonly superService: SuperService<T>,
+    @Inject(getModelToken('Fiche')) private readonly ficheModel: Model<T>,
+    @Inject(getModelToken('Quiz')) private readonly quizModel: Model<T>,
+    @Inject(getModelToken('Question')) private readonly questionModel: Model<T>,
+  ) {}
+
+  private getModel(name: string): Model<T> {
+    if (name === 'fiche') return this.ficheModel;
+    if (name === 'quiz') return this.quizModel;
+    if (name === 'question') return this.questionModel;
+    throw new Error(`Modèle inconnu: ${name}`);
+  }
 
   @Get()
-  async findAll(): Promise<T[]> {
-    return this.superService.findAll();
+  async findAll(@Param('name') name: string): Promise<T[]> {
+    return this.superService.findAll(this.getModel(name));
   }
 
   @Get(':id')
-  async findOne(@Param('id') id: string): Promise<T> {
-    return this.superService.findOne(id);
+  async findOne(@Param('name') name: string, @Param('id') id: string): Promise<T> {
+    return this.superService.findOne(id, this.getModel(name));
   }
 
   @Post()
-  async create(@Body() data: T): Promise<T> {
-    return this.superService.create(data);
+  async create(@Param('name') name: string, @Body() data: T): Promise<T> {
+    return this.superService.create(data, this.getModel(name));
   }
 
   @Put(':id')
-  async update(@Param('id') id: string, @Body() data: T): Promise<T> {
-    return this.superService.update(id, data);
+  async update(@Param('name') name: string, @Param('id') id: string, @Body() data: T): Promise<T> {
+    return this.superService.update(id, data, this.getModel(name));
   }
 
   @Delete(':id')
-  async delete(@Param('id') id: string): Promise<T> {
-    return this.superService.delete(id);
+  async delete(@Param('name') name: string, @Param('id') id: string): Promise<T> {
+    return this.superService.delete(id, this.getModel(name));
   }
 }
