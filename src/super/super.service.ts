@@ -24,4 +24,5 @@ export class SuperService<T> {
   async delete(id: string): Promise<T> | null {
     return this.model.findByIdAndDelete(id).exec();
   }
+  
 }
