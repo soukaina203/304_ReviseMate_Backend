@@ -2,18 +2,17 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
-import { UsersModule } from './users/users.module';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { SuperModule } from './super/super.module';
 import { FicheModule } from './features/fiche/fiche.module';
 import { QuizModule } from './features/quiz/quiz.module';
 import { QuestionModule } from './features/question/question.module';
+import { UserModule } from './features/user/user.module';
 
 @Module({
   imports: [
     AuthModule,
-    UsersModule,
     SuperModule,
     ConfigModule.forRoot(),
     MongooseModule.forRootAsync({
@@ -30,6 +29,7 @@ import { QuestionModule } from './features/question/question.module';
     FicheModule,
     QuizModule,
     QuestionModule, // CRUD
+    UserModule,
   ],
   controllers: [AppController],
   providers: [AppService],

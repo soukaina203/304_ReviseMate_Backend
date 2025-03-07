@@ -3,9 +3,10 @@ import { MongooseModule, getModelToken } from '@nestjs/mongoose';
 import { SuperService } from './super.service';
 import { SuperController } from './super.controller';
 import mongoose, { Model } from 'mongoose';
-import { FicheSchema } from "../schemas/fiche.schema";
-import { QuizSchema } from "../schemas/quiz.schema";
-import { QuestionSchema } from "../schemas/question.schema";
+import { FicheSchema } from '../schemas/fiche.schema';
+import { QuizSchema } from '../schemas/quiz.schema';
+import { QuestionSchema } from '../schemas/question.schema';
+import { UserSchema } from '../schemas/user.schema';
 
 @Module({})
 export class SuperModule {
@@ -17,6 +18,7 @@ export class SuperModule {
           { name: 'Fiche', schema: FicheSchema },
           { name: 'Quiz', schema: QuizSchema },
           { name: 'Question', schema: QuestionSchema },
+          { name: 'User', schema: UserSchema },
         ]),
       ],
       providers: [

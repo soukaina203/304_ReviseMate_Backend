@@ -12,12 +12,14 @@ export class SuperController<T> {
     @Inject(getModelToken('Fiche')) private readonly ficheModel: Model<T>,
     @Inject(getModelToken('Quiz')) private readonly quizModel: Model<T>,
     @Inject(getModelToken('Question')) private readonly questionModel: Model<T>,
+    @Inject(getModelToken('User')) private readonly userModel: Model<T>,
   ) {}
 
   private getModel(name: string): Model<T> {
     if (name === 'fiche') return this.ficheModel;
     if (name === 'quiz') return this.quizModel;
     if (name === 'question') return this.questionModel;
+    if (name === 'user') return this.userModel;
     throw new Error(`Modèle inconnu: ${name}`);
   }
 
@@ -27,7 +29,10 @@ export class SuperController<T> {
   }
 
   @Get(':id')
-  async findOne(@Param('name') name: string, @Param('id') id: string): Promise<T> {
+  async findOne(
+    @Param('name') name: string,
+    @Param('id') id: string,
+  ): Promise<T> {
     return this.superService.findOne(id, this.getModel(name));
   }
 
@@ -37,7 +42,11 @@ export class SuperController<T> {
   }
 
   @Put(':id')
-  async update(@Param('name') name: string, @Param('id') id: string, @Body() data: T): Promise<T> {
+  async update(
+    @Param('name') name: string,
+    @Param('id') id: string,
+    @Body() data: T,
+  ): Promise<T> {
     return this.superService.update(id, data, this.getModel(name));
   }
 
