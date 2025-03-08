@@ -7,6 +7,7 @@ import { FicheSchema } from '../schemas/fiche.schema';
 import { QuizSchema } from '../schemas/quiz.schema';
 import { QuestionSchema } from '../schemas/question.schema';
 import { UserSchema } from '../schemas/user.schema';
+import { ClasseSchema } from "../schemas/classe.schema";
 
 @Module({})
 export class SuperModule {
@@ -19,6 +20,7 @@ export class SuperModule {
           { name: 'Quiz', schema: QuizSchema },
           { name: 'Question', schema: QuestionSchema },
           { name: 'User', schema: UserSchema },
+          { name: 'Classe', schema: ClasseSchema },
         ]),
       ],
       providers: [

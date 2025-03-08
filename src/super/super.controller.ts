@@ -13,6 +13,7 @@ export class SuperController<T> {
     @Inject(getModelToken('Quiz')) private readonly quizModel: Model<T>,
     @Inject(getModelToken('Question')) private readonly questionModel: Model<T>,
     @Inject(getModelToken('User')) private readonly userModel: Model<T>,
+    @Inject(getModelToken('Classe')) private readonly classeModel: Model<T>,
   ) {}
 
   private getModel(name: string): Model<T> {
@@ -20,6 +21,7 @@ export class SuperController<T> {
     if (name === 'quiz') return this.quizModel;
     if (name === 'question') return this.questionModel;
     if (name === 'user') return this.userModel;
+    if (name === 'classe') return this.classeModel;
     throw new Error(`Modèle inconnu: ${name}`);
   }
 

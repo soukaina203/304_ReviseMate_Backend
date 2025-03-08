@@ -9,6 +9,7 @@ import { FicheModule } from './features/fiche/fiche.module';
 import { QuizModule } from './features/quiz/quiz.module';
 import { QuestionModule } from './features/question/question.module';
 import { UserModule } from './features/user/user.module';
+import { ClasseModule } from './features/classe/classe.module';
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { UserModule } from './features/user/user.module';
     QuizModule,
     QuestionModule, // CRUD
     UserModule,
+    ClasseModule,
   ],
   controllers: [AppController],
   providers: [AppService],
