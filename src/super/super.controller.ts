@@ -1,4 +1,13 @@
-import { Controller, Get, Post, Patch, Delete, Param, Body, Inject } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Patch,
+  Delete,
+  Param,
+  Body,
+  Inject,
+} from '@nestjs/common';
 import { SuperService } from './super.service';
 import { getModelToken } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
@@ -53,7 +62,10 @@ export class SuperController<T> {
   }
 
   @Delete(':id')
-  async delete(@Param('name') name: string, @Param('id') id: string): Promise<T> {
+  async delete(
+    @Param('name') name: string,
+    @Param('id') id: string,
+  ): Promise<T> {
     return this.superService.delete(id, this.getModel(name));
   }
 }
