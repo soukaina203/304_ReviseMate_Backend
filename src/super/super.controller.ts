@@ -17,7 +17,7 @@ export class SuperController<T> {
   private model: Model<T>;
 
   constructor(
-    @Inject(SuperService) private readonly superService: SuperService<T>,
+    @Inject(SuperService) protected readonly superService: SuperService<T>,
     @Inject(getModelToken('Fiche')) private readonly ficheModel: Model<T>,
     @Inject(getModelToken('Quiz')) private readonly quizModel: Model<T>,
     @Inject(getModelToken('Question')) private readonly questionModel: Model<T>,
