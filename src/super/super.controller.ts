@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Put, Delete, Param, Body, Inject } from '@nestjs/common';
+import { Controller, Get, Post, Patch, Delete, Param, Body, Inject } from '@nestjs/common';
 import { SuperService } from './super.service';
 import { getModelToken } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
@@ -43,7 +43,7 @@ export class SuperController<T> {
     return this.superService.create(data, this.getModel(name));
   }
 
-  @Put(':id')
+  @Patch(':id')
   async update(
     @Param('name') name: string,
     @Param('id') id: string,
