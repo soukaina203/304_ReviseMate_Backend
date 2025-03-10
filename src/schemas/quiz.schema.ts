@@ -3,7 +3,7 @@ import { Document } from 'mongoose';
 
 export type QuizDocument = Quiz & Document;
 
-@Schema()
+@Schema({ collection: 'quiz' })
 export class Quiz {
   @Prop({ required: true })
   titre: string;
