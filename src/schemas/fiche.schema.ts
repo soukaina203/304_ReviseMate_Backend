@@ -18,6 +18,13 @@ export class Fiche {
   })
   id_cours: Types.ObjectId;
 
+  @Prop({
+    required: true,
+    type: MongooseSchema.Types.ObjectId,
+    ref: 'id_utilisateur',
+  })
+  id_utilisateur: Types.ObjectId;
+
   @Prop()
   date_creation: Date;
 }
