@@ -1,22 +1,23 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Schema as MongooseSchema, Types } from 'mongoose';
 
-export type FicheDocument = Fiche & Document;
+@Schema({ collection: 'carte_memoire' })
+export class CarteMemoire extends Document {
+  @Prop({ required: true })
+  question: string;
 
-@Schema({ collection: 'fiche' })
-export class Fiche {
+  @Prop({ required: true })
+  réponse: string;
+
   @Prop({ required: true })
   titre: string;
-
-  @Prop({ required: true })
-  contenu: string;
 
   @Prop({
     required: true,
     type: MongooseSchema.Types.ObjectId,
-    ref: 'id_cours',
+    ref: 'id_fiche',
   })
-  id_cours: Types.ObjectId;
+  id_fiche: Types.ObjectId;
 
   @Prop({
     required: true,
@@ -24,9 +25,6 @@ export class Fiche {
     ref: 'id_utilisateur',
   })
   id_utilisateur: Types.ObjectId;
-
-  @Prop()
-  date_creation: Date;
 }
 
-export const FicheSchema = SchemaFactory.createForClass(Fiche);
+export const CarteMemoireSchema = SchemaFactory.createForClass(CarteMemoire);

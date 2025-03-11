@@ -10,6 +10,7 @@ import { QuizModule } from './features/quiz/quiz.module';
 import { QuestionModule } from './features/question/question.module';
 import { UserModule } from './features/user/user.module';
 import { ClasseModule } from './features/classe/classe.module';
+import { Carte_memoireModule } from './features/carte_memoire/carte_memoire.module';
 
 @Module({
   imports: [
@@ -32,6 +33,7 @@ import { ClasseModule } from './features/classe/classe.module';
     QuestionModule, // CRUD
     UserModule,
     ClasseModule,
+    Carte_memoireModule,
   ],
   controllers: [AppController],
   providers: [AppService],

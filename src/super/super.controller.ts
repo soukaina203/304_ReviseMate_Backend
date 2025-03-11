@@ -1,4 +1,13 @@
-import { Controller, Get, Post, Put, Delete, Param, Body, Inject } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Patch,
+  Delete,
+  Param,
+  Body,
+  Inject,
+} from '@nestjs/common';
 import { SuperService } from './super.service';
 import { getModelToken } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
@@ -8,12 +17,14 @@ export class SuperController<T> {
   private model: Model<T>;
 
   constructor(
-    @Inject(SuperService) private readonly superService: SuperService<T>,
+    @Inject(SuperService) protected readonly superService: SuperService<T>,
     @Inject(getModelToken('Fiche')) private readonly ficheModel: Model<T>,
     @Inject(getModelToken('Quiz')) private readonly quizModel: Model<T>,
     @Inject(getModelToken('Question')) private readonly questionModel: Model<T>,
     @Inject(getModelToken('User')) private readonly userModel: Model<T>,
     @Inject(getModelToken('Classe')) private readonly classeModel: Model<T>,
+    @Inject(getModelToken('Carte_memoire'))
+    private readonly carte_memoireModel: Model<T>,
   ) {}
 
   private getModel(name: string): Model<T> {
@@ -22,6 +33,7 @@ export class SuperController<T> {
     if (name === 'question') return this.questionModel;
     if (name === 'user') return this.userModel;
     if (name === 'classe') return this.classeModel;
+    if (name === 'carte_memoire') return this.carte_memoireModel;
     throw new Error(`Modèle inconnu: ${name}`);
   }
 
@@ -43,7 +55,7 @@ export class SuperController<T> {
     return this.superService.create(data, this.getModel(name));
   }
 
-  @Put(':id')
+  @Patch(':id')
   async update(
     @Param('name') name: string,
     @Param('id') id: string,
@@ -53,7 +65,10 @@ export class SuperController<T> {
   }
 
   @Delete(':id')
-  async delete(@Param('name') name: string, @Param('id') id: string): Promise<T> {
+  async delete(
+    @Param('name') name: string,
+    @Param('id') id: string,
+  ): Promise<T> {
     return this.superService.delete(id, this.getModel(name));
   }
 }
