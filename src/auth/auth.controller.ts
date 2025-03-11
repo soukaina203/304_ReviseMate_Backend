@@ -5,6 +5,11 @@ import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
 import { Request } from 'express';
 
+interface SessionUser {
+  id: string;
+  email: string;
+  id_role: any;
+}
 // Add the @Controller() decorator to the AuthController class. | Ajouter le décorateur @Controller() à la classe AuthController.
 @Controller('auth')
 
@@ -47,6 +52,7 @@ export class AuthController {
   
   // Add the login() method to the AuthController class. | Ajouter la méthode login() à la classe AuthController.
   @Post('login')
+
   async login(@Body() loginDto: LoginDto, @Req() req: Request) {
     // Extraire les informations de l'objet loginDto
     const { email, password } = loginDto;
@@ -63,7 +69,7 @@ export class AuthController {
     }
 
     // Register the user in session  | Enregistrer l'utilisateur en session
-    req.session.user = { id: user.id, email: user.email };
+    req.session.user = { id: user.id, email: user.email, id_role: user.id_role } as SessionUser;
     return { message: 'Connexion réussie', user: req.session.user };
   }
 

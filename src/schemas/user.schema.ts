@@ -1,7 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Schema as MongooseSchema } from 'mongoose';
-
-//export type UserDocument = User & Document;
+//import * as bcrypt from 'bcrypt';
+export type UserDocument = User & Document;
 
 // Schema definition for the User model. | Définition du schéma pour le modèle User.
 @Schema({ collection: 'utilisateur' })
@@ -33,3 +33,20 @@ export class User extends Document {
 
 // Export the User schema. | Exporter le schéma User.
 export const UserSchema = SchemaFactory.createForClass(User);
+
+/* Hook pour gérer le hachage du mdp
+UserSchema.pre('save', async function (next) {
+  const user = this as any; // cast as any to avoid typing issues
+
+  if (!user.isModified('password')) {
+    return next();
+  }
+
+  try {
+    const salt = await bcrypt.genSalt(12);
+    user.password = await bcrypt.hash(user.password, salt);
+    next();
+  } catch (err) {
+    next(err);
+  }
+});*/
