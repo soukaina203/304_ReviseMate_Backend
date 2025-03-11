@@ -9,6 +9,9 @@ export class CarteMemoire {
   @Prop({ required: true })
   réponse: string;
 
+  @Prop({ required: true })
+  titre: string;
+
   @Prop({
     required: true,
     type: MongooseSchema.Types.ObjectId,
