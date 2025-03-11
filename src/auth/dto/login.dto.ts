@@ -1,9 +1,10 @@
-import { IsEmail, IsNotEmpty, MinLength } from '@nestjs/class-validator';
+import { IsEmail, IsNotEmpty } from '@nestjs/class-validator';
+//import { Schema as MongooseSchema } from 'mongoose';
 
 export class LoginDto {
-    @IsNotEmpty() 
-    email: string;
+  @IsEmail()
+  email: string;
 
-    @IsNotEmpty() 
-    password: string;
-  }
+  @IsNotEmpty()
+  password: string;
+}

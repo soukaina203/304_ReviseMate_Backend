@@ -4,7 +4,7 @@ import { Types } from 'mongoose';
 
 export type QuestionDocument = Question & Document;
 
-@Schema()
+@Schema({ collection: 'question' })
 export class Question {
   @Prop({ required: true })
   texte: string;
