@@ -17,7 +17,7 @@ export class SummaryService {
       {
         model: 'mistral-medium',
         messages: [{ role: 'user', content: `Résumé : ${text}` }],
-        max_tokens: 200,
+        max_tokens: 4096, //max tokens
       },
       { headers: { Authorization: `Bearer ${this.apiKey}`, 'Content-Type': 'application/json' } }
     );
