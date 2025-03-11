@@ -7,7 +7,8 @@ import { FicheSchema } from '../schemas/fiche.schema';
 import { QuizSchema } from '../schemas/quiz.schema';
 import { QuestionSchema } from '../schemas/question.schema';
 import { UserSchema } from '../schemas/user.schema';
-import { ClasseSchema } from "../schemas/classe.schema";
+import { ClasseSchema } from '../schemas/classe.schema';
+import { CarteMemoireSchema } from '../schemas/carte_memoire.schema';
 
 @Module({})
 export class SuperModule {
@@ -21,6 +22,7 @@ export class SuperModule {
           { name: 'Question', schema: QuestionSchema },
           { name: 'User', schema: UserSchema },
           { name: 'Classe', schema: ClasseSchema },
+          { name: 'Carte_memoire', schema: CarteMemoireSchema },
         ]),
       ],
       providers: [

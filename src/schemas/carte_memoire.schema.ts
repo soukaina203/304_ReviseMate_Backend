@@ -1,8 +1,8 @@
-import { Prop, Schema } from '@nestjs/mongoose';
-import { Schema as MongooseSchema, Types } from 'mongoose';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Document, Schema as MongooseSchema, Types } from 'mongoose';
 
 @Schema({ collection: 'carte_memoire' })
-export class CarteMemoire {
+export class CarteMemoire extends Document {
   @Prop({ required: true })
   question: string;
 
@@ -26,3 +26,5 @@ export class CarteMemoire {
   })
   id_utilisateur: Types.ObjectId;
 }
+
+export const CarteMemoireSchema = SchemaFactory.createForClass(CarteMemoire);
