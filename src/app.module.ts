@@ -12,6 +12,7 @@ import { UserModule } from './features/user/user.module';
 import { ClasseModule } from './features/classe/classe.module';
 import { SummaryModule } from './summary/summary.module';
 import { Carte_memoireModule } from './features/carte_memoire/carte_memoire.module';
+import { FlashcardModule } from './flashcard/flashcard.module';
 
 
 @Module({
@@ -37,6 +38,7 @@ import { Carte_memoireModule } from './features/carte_memoire/carte_memoire.modu
     ClasseModule,
     SummaryModule,
     Carte_memoireModule,
+    FlashcardModule,
   ],
   controllers: [AppController],
   providers: [AppService],
