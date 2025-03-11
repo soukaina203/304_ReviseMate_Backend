@@ -7,37 +7,32 @@ import { Update_userDto } from '../../auth/dto/update_user.dto';
 
 @Injectable()
 export class UserService {
-  constructor(@InjectModel('User') private readonly userModel: Model<User>) {}
-
   private readonly logger = new Logger(UserService.name);
 
-  async updateUser(
-    id: string,
-    data: Update_userDto,
-  ): Promise<{ message: string; user: any }> {
-    const user = await this.userModel.findById(id).exec();
+  constructor(@InjectModel(User.name) private readonly userModel: Model<User>) {}
 
+  async update(id: string, updateUserDto: Update_userDto): Promise<User> {
+    this.logger.log(`Mise à jour de l'utilisateur avec l'ID : ${id}`);
+
+    const cleanId = id.trim();
+  
+    //Vérifie si l'utilisateur existe | Check if the user exists
+    const user = await this.userModel.findById(cleanId);
     if (!user) {
-      throw new NotFoundException('Utilisateur introuvable!');
+      throw new NotFoundException(`Utilisateur avec l'ID ${cleanId} non trouvé.`);
     }
-
-    if (data.firstName !== undefined) user.firstName = data.firstName;
-    if (data.lastName !== undefined) user.lastName = data.lastName;
-    if (data.email !== undefined) user.email = data.email;
-
-    if (data.password && data.password.trim() !== '') {
-      const salt = await bcrypt.genSalt(12);
-      user.password = await bcrypt.hash(data.password, salt);
+  
+    //Si un mot de passe est fourni, on le hash | If a password is provided, hash it
+    if (updateUserDto.password) {
+      this.logger.log('Hashage du mot de passe...');
+      updateUserDto.password = await bcrypt.hash(updateUserDto.password, 10);
     }
-
-    const updatedUser = await user.save();
-
-    const userObj = updatedUser.toObject();
-    delete userObj.password;
-
-    return {
-      message: 'Utilisateur mis à jour!',
-      user: userObj,
-    };
+  
+    //Mise à jour de l'utilisateur | Update the user
+    await this.userModel.findByIdAndUpdate(cleanId, updateUserDto, { new: true });
+  
+    //Retourne l'utilisateur mis à jour | Return the updated user
+    return this.userModel.findById(cleanId);
   }
+  
 }
