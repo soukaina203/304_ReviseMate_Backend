@@ -1,17 +1,15 @@
-import { Body, Controller, Param, Patch } from '@nestjs/common';
+import { Controller, Put, Param, Body } from '@nestjs/common';
 import { UserService } from './user.service';
-//import { SuperController } from '../../super/super.controller';
+import { Update_userDto } from '../../auth/dto/update_user.dto';
 import { User } from '../../schemas/user.schema';
 
 @Controller('super/user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
-  @Patch(':id')
-  async update(
-    @Param('id') id: string,
-    @Body() data: User,
-  ): Promise<{ message: string }> {
-    return this.userService.updateUser(id, data);
+  // Update a user | Mettre à jour un utilisateur
+  @Put(':id')
+  async update(@Param('id') id: string, @Body() updateUserDto: Update_userDto): Promise<User> {
+    return this.userService.update(id, updateUserDto);
   }
 }

@@ -3,7 +3,7 @@ import { Injectable, BadRequestException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import * as bcrypt from 'bcrypt';
-import { User } from '../schemas/user.schema';
+import { User, UserDocument } from "../schemas/user.schema";
 import { RegisterDto } from './dto/register.dto';
 import { Code_prof, CodeProfDocument } from "src/schemas/code_prof.schema";
 
@@ -11,7 +11,7 @@ import { Code_prof, CodeProfDocument } from "src/schemas/code_prof.schema";
 export class AuthService {
   // Add the User model to the constructor. | Ajouter le modèle User au constructeur.
   constructor(
-    @InjectModel(User.name) private userModel: Model<User>,
+    @InjectModel(User.name) private userModel: Model<UserDocument>,
     @InjectModel(Code_prof.name) private universityModel: Model<CodeProfDocument>,
 ) {}
 
@@ -61,7 +61,7 @@ export class AuthService {
   }
 
 
-  async login(email: string, password: string) {
+  async login(email: string, password: string): Promise<UserDocument | null> {
     // Recherche l'utilisateur dans la base de données par email
     const user = await this.userModel.findOne({ email }).exec();
 

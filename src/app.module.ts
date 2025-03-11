@@ -37,7 +37,6 @@ import { Carte_memoireModule } from './features/carte_memoire/carte_memoire.modu
     ClasseModule,
     SummaryModule,
     Carte_memoireModule,
-
   ],
   controllers: [AppController],
   providers: [AppService],

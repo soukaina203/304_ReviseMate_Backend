@@ -1,29 +1,38 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { User } from '../../schemas/user.schema';
 import { Model } from 'mongoose';
 import * as bcrypt from 'bcrypt';
+import { Update_userDto } from '../../auth/dto/update_user.dto';
 
 @Injectable()
 export class UserService {
-  constructor(@InjectModel('User') private readonly userModel: Model<User>) {}
+  private readonly logger = new Logger(UserService.name);
 
-  async updateUser(id: string, data: User): Promise<{ message: string }> {
-    if (data.password) {
-      const salt = await bcrypt.genSalt(12);
-      data.password = await bcrypt.hash(data.password, salt);
+  constructor(@InjectModel(User.name) private readonly userModel: Model<User>) {}
+
+  async update(id: string, updateUserDto: Update_userDto): Promise<User> {
+    this.logger.log(`Mise à jour de l'utilisateur avec l'ID : ${id}`);
+
+    const cleanId = id.trim();
+  
+    //Vérifie si l'utilisateur existe | Check if the user exists
+    const user = await this.userModel.findById(cleanId);
+    if (!user) {
+      throw new NotFoundException(`Utilisateur avec l'ID ${cleanId} non trouvé.`);
     }
-
-    const updatedUser = await this.userModel
-      .findByIdAndUpdate(id, data, {
-        new: true,
-      })
-      .exec();
-
-    if (!updatedUser) {
-      throw new NotFoundException('Utilisateur introuvable!');
+  
+    //Si un mot de passe est fourni, on le hash | If a password is provided, hash it
+    if (updateUserDto.password) {
+      this.logger.log('Hashage du mot de passe...');
+      updateUserDto.password = await bcrypt.hash(updateUserDto.password, 10);
     }
-
-    return { message: 'Utilisateur mis à jour!' };
+  
+    //Mise à jour de l'utilisateur | Update the user
+    await this.userModel.findByIdAndUpdate(cleanId, updateUserDto, { new: true });
+  
+    //Retourne l'utilisateur mis à jour | Return the updated user
+    return this.userModel.findById(cleanId);
   }
+  
 }

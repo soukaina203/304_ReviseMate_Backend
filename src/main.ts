@@ -3,9 +3,11 @@ import { NestFactory } from '@nestjs/core';
 import * as session from 'express-session';
 import { AppModule } from './app.module';
 import * as process from 'node:process';
+import { ConsoleLogger } from "@nestjs/common";
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule,
+    { logger: new ConsoleLogger() });
 
   // configuration de la session | session configuration
   app.use(
