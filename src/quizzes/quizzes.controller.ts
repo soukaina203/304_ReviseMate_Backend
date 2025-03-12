@@ -26,7 +26,7 @@ export class QuizzesController {
     }
   }
 
-  @Post('pdf')
+  @Post('generate/pdf')
   @UseInterceptors(FileInterceptor('file'))
   async generateQuizzesFromPdf(@UploadedFile() file: Express.Multer.File) {
     try {
