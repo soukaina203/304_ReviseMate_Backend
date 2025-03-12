@@ -15,24 +15,23 @@ export class UserService {
     this.logger.log(`Mise à jour de l'utilisateur avec l'ID : ${id}`);
 
     const cleanId = id.trim();
-  
+
     //Vérifie si l'utilisateur existe | Check if the user exists
     const user = await this.userModel.findById(cleanId);
     if (!user) {
       throw new NotFoundException(`Utilisateur avec l'ID ${cleanId} non trouvé.`);
     }
-  
+
     //Si un mot de passe est fourni, on le hash | If a password is provided, hash it
     if (updateUserDto.password) {
       this.logger.log('Hashage du mot de passe...');
       updateUserDto.password = await bcrypt.hash(updateUserDto.password, 10);
     }
-  
+
     //Mise à jour de l'utilisateur | Update the user
     await this.userModel.findByIdAndUpdate(cleanId, updateUserDto, { new: true });
-  
+
     //Retourne l'utilisateur mis à jour | Return the updated user
     return this.userModel.findById(cleanId);
   }
-  
 }
