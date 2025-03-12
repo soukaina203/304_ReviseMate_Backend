@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
 import { SummaryService } from './summary.service';
-import { SummaryController } from './summary.controller';
+import { RevisionController } from './summary.controller';
 
 @Module({
   providers: [SummaryService],
-  controllers: [SummaryController]
+  controllers: [RevisionController]
 })
 export class SummaryModule {}
