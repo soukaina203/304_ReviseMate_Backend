@@ -44,7 +44,7 @@ import { QuizzesModule } from './quizzes/quizzes.module';
     FlashcardModule,
     QuizzesModule,
   ],
-  controllers: [AppController, QuizzesController],
-  providers: [AppService, QuizzesService],
+  controllers: [AppController],
+  providers: [AppService],
 })
 export class AppModule {}
