@@ -13,7 +13,7 @@ export class SuperService<T> {
     return model.find().exec();
   }
 
-  async findOne(id: string, model: Model<T>): Promise<T> {
+  async findOne(id: string, model: Model<T>): Promise<T | null> {
     return model.findById(id).exec();
   }
 
@@ -21,11 +21,11 @@ export class SuperService<T> {
     id: string,
     data: UpdateQuery<T>,
     model: Model<T>,
-  ): Promise<T> | null {
+  ): Promise<T | null> {
     return model.findByIdAndUpdate(id, data, { new: true }).exec();
   }
 
-  async delete(id: string, model: Model<T>): Promise<T> | null {
+  async delete(id: string, model: Model<T>): Promise<T | null> {
     return model.findByIdAndDelete(id).exec();
   }
 }

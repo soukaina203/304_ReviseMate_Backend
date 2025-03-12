@@ -7,6 +7,8 @@ import {
   Param,
   Body,
   Inject,
+  NotFoundException,
+  InternalServerErrorException,
 } from '@nestjs/common';
 import { SuperService } from './super.service';
 import { getModelToken } from '@nestjs/mongoose';
@@ -38,37 +40,153 @@ export class SuperController<T> {
   }
 
   @Get()
-  async findAll(@Param('name') name: string): Promise<T[]> {
-    return this.superService.findAll(this.getModel(name));
+  async findAll(@Param('name') name: string): Promise<{
+    success: boolean;
+    message: string;
+    data?: T[];
+  }> {
+    try {
+      const data = await this.superService.findAll(this.getModel(name));
+      return {
+        success: true,
+        message: 'Données récupérées avec succès',
+        data,
+      };
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (error) {
+      throw new InternalServerErrorException({
+        success: false,
+        message: 'Impossible de récupérer les données',
+      });
+    }
   }
 
   @Get(':id')
   async findOne(
     @Param('name') name: string,
     @Param('id') id: string,
-  ): Promise<T> {
-    return this.superService.findOne(id, this.getModel(name));
+  ): Promise<{
+    success: boolean;
+    message: string;
+    data?: T;
+  }> {
+    try {
+      const data = await this.superService.findOne(id, this.getModel(name));
+      if (!data) {
+        throw new NotFoundException({
+          success: false,
+          message: 'Données non trouvées.',
+        });
+      }
+      return {
+        success: true,
+        message: 'Données récupérées avec succès',
+        data,
+      };
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (error) {
+      throw new InternalServerErrorException({
+        success: false,
+        message: 'Impossible de récupérer les données',
+      });
+    }
   }
 
   @Post()
-  async create(@Param('name') name: string, @Body() data: T): Promise<T> {
-    return this.superService.create(data, this.getModel(name));
+  async create(
+    @Param('name') name: string,
+    @Body() data: T,
+  ): Promise<{
+    success: boolean;
+    message: string;
+    data?: T;
+  }> {
+    try {
+      const createdData = await this.superService.create(
+        data,
+        this.getModel(name),
+      );
+      return {
+        success: true,
+        message: 'Données créées avec succès',
+        data: createdData,
+      };
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (error) {
+      throw new InternalServerErrorException({
+        success: false,
+        message: 'Impossible de créer les données.',
+      });
+    }
   }
 
   @Patch(':id')
   async update(
     @Param('name') name: string,
     @Param('id') id: string,
-    @Body() data: T,
-  ): Promise<T> {
-    return this.superService.update(id, data, this.getModel(name));
+    @Body() data: Partial<T>,
+  ): Promise<{
+    success: boolean;
+    message: string;
+    data?: T;
+  }> {
+    try {
+      const updatedData = await this.superService.update(
+        id,
+        data,
+        this.getModel(name),
+      );
+      if (!updatedData) {
+        throw new NotFoundException({
+          success: false,
+          message: 'Données non trouvées.',
+        });
+      }
+      return {
+        success: true,
+        message: 'Données mises à jour avec succès.',
+        data: updatedData,
+      };
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (error) {
+      throw new InternalServerErrorException({
+        success: false,
+        message: 'Impossible de mettre à jour les données.',
+      });
+    }
   }
 
   @Delete(':id')
   async delete(
     @Param('name') name: string,
     @Param('id') id: string,
-  ): Promise<T> {
-    return this.superService.delete(id, this.getModel(name));
+  ): Promise<{
+    success: boolean;
+    message: string;
+    data?: T;
+  }> {
+    try {
+      const deletedData = await this.superService.delete(
+        id,
+        this.getModel(name),
+      );
+      if (!deletedData) {
+        throw new NotFoundException({
+          success: false,
+          message: 'Données non trouvées.',
+        });
+      }
+      return {
+        success: true,
+        message: 'Données supprimmées avec succès.',
+        data: deletedData,
+      };
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (error) {
+      throw new InternalServerErrorException({
+        success: false,
+        message: 'Impossible de supprimer les données.',
+      });
+    }
   }
 }
