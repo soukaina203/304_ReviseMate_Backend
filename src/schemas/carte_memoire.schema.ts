@@ -4,12 +4,6 @@ import { Document, Schema as MongooseSchema, Types } from 'mongoose';
 @Schema({ collection: 'carte_memoire' })
 export class CarteMemoire extends Document {
   @Prop({ required: true })
-  question: string;
-
-  @Prop({ required: true })
-  réponse: string;
-
-  @Prop({ required: true })
   titre: string;
 
   @Prop({
@@ -25,6 +19,17 @@ export class CarteMemoire extends Document {
     ref: 'id_utilisateur',
   })
   id_utilisateur: Types.ObjectId;
+
+  @Prop({
+    type: [
+      {
+        question: String,
+        réponse: String,
+      },
+    ],
+    required: true,
+  })
+  questions_reponses: { question: string; réponse: string }[];
 }
 
 export const CarteMemoireSchema = SchemaFactory.createForClass(CarteMemoire);
