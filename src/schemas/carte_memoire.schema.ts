@@ -7,7 +7,7 @@ export class CarteMemoire extends Document {
   titre: string;
 
   @Prop({
-    required: true,
+    required: false,
     type: MongooseSchema.Types.ObjectId,
     ref: 'id_fiche',
   })

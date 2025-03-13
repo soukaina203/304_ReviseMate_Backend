@@ -12,7 +12,7 @@ export class Fiche {
   contenu: string;
 
   @Prop({
-    required: true,
+    required: false,
     type: MongooseSchema.Types.ObjectId,
     ref: 'id_cours',
   })
