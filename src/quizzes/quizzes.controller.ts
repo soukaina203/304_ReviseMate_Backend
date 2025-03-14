@@ -14,7 +14,7 @@ import * as pdfParse from 'pdf-parse';
 export class QuizzesController {
   constructor(private readonly quizzesService: QuizzesService) {}
 
-  @Post('generate')
+  @Post('')
   async generateQuizzes(@Body() { content }: { content: string }) {
     try {
       const quizzes = await this.quizzesService.generateQuizzes(content);
@@ -26,7 +26,7 @@ export class QuizzesController {
     }
   }
 
-  @Post('generate/pdf')
+  @Post('pdf')
   @UseInterceptors(FileInterceptor('file'))
   async generateQuizzesFromPdf(@UploadedFile() file: Express.Multer.File) {
     try {
