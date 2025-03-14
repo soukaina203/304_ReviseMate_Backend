@@ -17,7 +17,7 @@ export class QuizzesService {
     }[]
   > {
     const prompt = `
-  Génère jusqu'à 20 questions sur ce texte. Pour chaque question, donne :
+  Génère exactement 20 questions sur ce texte. Pour chaque question, donne :
   - Une bonne réponse.
   - Trois mauvaises réponses.
 
