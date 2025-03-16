@@ -9,7 +9,7 @@ export class FlashcardService {
 
   constructor(private readonly httpService: HttpService) {}
 
-  async generateFlashcards(content: string): Promise<{ question: string, answer: string }[]> {
+  async generateFlashcards(content: string): Promise<{ success: boolean, message: string, data?: { question: string, réponse: string }[] }> {
     // Prompt pour l'API avec instruction de langue
     const prompt = `Crée jusqu'à 20 questions et leurs réponses en français à partir du texte suivant, sans inclure les mots "question" ou "réponse" dans les réponses : ${content}`;
 
@@ -33,38 +33,30 @@ export class FlashcardService {
         )
       );
 
-      console.log('Réponse complète de l\'API:', response.data);
-
       const messageContent = response.data.choices && response.data.choices[0]?.message?.content;
 
       if (!messageContent) {
-        throw new Error('La réponse de l\'API ne contient pas de contenu valide');
+        return { success: false, message: 'La réponse de l\'API est vide ou invalide.' };
       }
-
-      console.log('Contenu reçu avant nettoyage:', messageContent);
 
       let cleanMessage = messageContent.trim();
       cleanMessage = cleanMessage.replace(/Réponse:/g, '').trim();
       cleanMessage = cleanMessage.replace(/Question:/g, '').trim();
 
-      console.log('Message nettoyé:', cleanMessage);
-
       const pairs = cleanMessage.split('\n').filter(part => part.trim() !== '');
-
-      console.log('Paires après découpage et filtrage :', pairs);
-
       const flashcards = [];
+      
       for (let i = 0; i < pairs.length; i += 2) {
         let question = pairs[i]?.trim();
-        let answer = pairs[i + 1]?.trim();
+        let réponse = pairs[i + 1]?.trim();
 
-        const words = answer.split(' ');
+        const words = réponse.split(' ');
         if (words.length > 15) {
-          answer = words.slice(0, 15).join(' ');
+          réponse = words.slice(0, 15).join(' ');
         }
 
-        if (question && answer) {
-          flashcards.push({ question, answer });
+        if (question && réponse) {
+          flashcards.push({ question, réponse });
         }
 
         if (flashcards.length >= 20) {
@@ -73,16 +65,12 @@ export class FlashcardService {
       }
 
       if (flashcards.length === 0) {
-        throw new Error('Aucune paire de question-réponse valide n\'a été générée.');
+        return { success: false, message: 'Aucune paire de question-réponse valide n\'a été générée.' };
       }
 
-      return flashcards;
+      return { success: true, message: 'Cartes mémoire générées avec succès.', data: flashcards };
     } catch (error) {
-      console.error('Erreur lors de la génération des cartes mémoire:', error);
-      throw new Error('Échec de la génération des cartes mémoire');
+      return { success: false, message: 'Erreur lors de la génération des cartes mémoire.' };
     }
-}
-
-  
-  
+  }
 }
