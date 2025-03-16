@@ -13,10 +13,8 @@ import { ClasseModule } from './features/classe/classe.module';
 import { SummaryModule } from './summary/summary.module';
 import { Carte_memoireModule } from './features/carte_memoire/carte_memoire.module';
 import { FlashcardModule } from './flashcard/flashcard.module';
-import { QuizzesController } from './quizzes/quizzes.controller';
-import { QuizzesService } from './quizzes/quizzes.service';
 import { QuizzesModule } from './quizzes/quizzes.module';
-
+import { AdminModule } from './admin/admin.module';
 
 @Module({
   imports: [
@@ -43,6 +41,7 @@ import { QuizzesModule } from './quizzes/quizzes.module';
     Carte_memoireModule,
     FlashcardModule,
     QuizzesModule,
+    AdminModule,
   ],
   controllers: [AppController],
   providers: [AppService],
