@@ -9,7 +9,15 @@ export class QuizzesService {
 
   constructor(private readonly httpService: HttpService) {}
 
-  async generateQuizzes(content: string): Promise<{ success: boolean, message: string, data?: { question: string; correctAnswer: string; wrongAnswers: string[] }[] }> {
+  async generateQuizzes(content: string): Promise<{
+    success: boolean;
+    message: string;
+    data?: {
+      question: string;
+      correctAnswer: string;
+      wrongAnswers: string[];
+    }[];
+  }> {
     const prompt = `
     Génère exactement 20 questions sur ce texte. Pour chaque question, donne :
     - Une bonne réponse.
@@ -40,7 +48,7 @@ export class QuizzesService {
           },
           {
             headers: {
-              'Authorization': `Bearer ${this.apiKey}`,
+              Authorization: `Bearer ${this.apiKey}`,
               'Content-Type': 'application/json',
             },
           },
@@ -50,13 +58,19 @@ export class QuizzesService {
       const messageContent = response.data.choices && response.data.choices[0]?.message?.content;
 
       if (!messageContent) {
-        return { success: false, message: "La réponse de l'API est vide ou invalide." };
+        return {
+          success: false,
+          message: "La réponse de l'API est vide ou invalide.",
+        };
       }
 
       const quizzes = JSON.parse(messageContent);
 
       if (!Array.isArray(quizzes)) {
-        return { success: false, message: 'Le format des quiz reçu est invalide.' };
+        return {
+          success: false,
+          message: 'Le format des quiz reçu est invalide.',
+        };
       }
 
       const validQuizzes = quizzes.map((quiz) => ({
@@ -69,9 +83,17 @@ export class QuizzesService {
         return { success: false, message: 'Aucun quiz valide généré.' };
       }
 
-      return { success: true, message: 'Quizz généré avec succès.', data: validQuizzes.slice(0, 20) };
+      return {
+        success: true,
+        message: 'Quizz généré avec succès.',
+        data: validQuizzes.slice(0, 20),
+      };
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
-      return { success: false, message: "Erreur lors de la génération des quiz." };
+      return {
+        success: false,
+        message: 'Erreur lors de la génération des quiz.',
+      };
     }
   }
 }
