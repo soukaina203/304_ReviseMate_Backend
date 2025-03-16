@@ -4,40 +4,33 @@ import { firstValueFrom } from 'rxjs';
 
 @Injectable()
 export class QuizzesService {
-  private readonly api_url = 'https://api.mistral.ai/v1/chat/completions';
-  private readonly api_key = process.env.MISTRAL_API_KEY;
+  private readonly apiUrl = 'https://api.mistral.ai/v1/chat/completions';
+  private readonly apiKey = process.env.MISTRAL_API_KEY;
 
   constructor(private readonly httpService: HttpService) {}
 
-  async generateQuizzes(content: string): Promise<
-    {
-      question: string;
-      correctAnswer: string;
-      wrongAnswers: string[];
-    }[]
-  > {
+  async generateQuizzes(content: string): Promise<{ success: boolean, message: string, data?: { question: string; correctAnswer: string; wrongAnswers: string[] }[] }> {
     const prompt = `
-  Génère exactement 20 questions sur ce texte. Pour chaque question, donne :
-  - Une bonne réponse.
-  - Trois mauvaises réponses.
+    Génère exactement 20 questions sur ce texte. Pour chaque question, donne :
+    - Une bonne réponse.
+    - Trois mauvaises réponses.
 
-Format de réponse JSON strict :
-[
-  {
-    "question ": "ta question",
-    "correct_answer": "bonne réponse",
-    "incorrect_answers": ["mauvaise 1", "mauvaise 2", "mauvaise 3"]
-  },
-  ...
-]
-
-Texte source : ${content}
-`;
+    Format de réponse JSON strict :
+    [
+      {
+        "question": "ta question",
+        "correct_answer": "bonne réponse",
+        "incorrect_answers": ["mauvaise 1", "mauvaise 2", "mauvaise 3"]
+      },
+      ...
+    ]
+    
+    Texte source : ${content}`;
 
     try {
       const response = await firstValueFrom(
         this.httpService.post(
-          this.api_url,
+          this.apiUrl,
           {
             model: 'mistral-medium',
             messages: [
@@ -47,31 +40,23 @@ Texte source : ${content}
           },
           {
             headers: {
-              Authorization: `Bearer ${this.api_key}`,
+              'Authorization': `Bearer ${this.apiKey}`,
               'Content-Type': 'application/json',
             },
           },
         ),
       );
 
-      console.log("Réponse complète de l'API:", response.data);
-
-      const messageContent =
-        response.data.choices && response.data.choices[0]?.message?.content;
+      const messageContent = response.data.choices && response.data.choices[0]?.message?.content;
 
       if (!messageContent) {
-        throw new Error(
-          "La réponse de l'API ne contient pas de contenu valide",
-        );
+        return { success: false, message: "La réponse de l'API est vide ou invalide." };
       }
 
-      console.log('Contenu brut reçu:', messageContent);
-
-      // Parse the JSON response directly
       const quizzes = JSON.parse(messageContent);
 
       if (!Array.isArray(quizzes)) {
-        throw new Error('Le format des quiz reçu est invalide.');
+        return { success: false, message: 'Le format des quiz reçu est invalide.' };
       }
 
       const validQuizzes = quizzes.map((quiz) => ({
@@ -81,15 +66,12 @@ Texte source : ${content}
       }));
 
       if (validQuizzes.length === 0) {
-        throw new Error('Aucun quiz valide généré.');
+        return { success: false, message: 'Aucun quiz valide généré.' };
       }
 
-      return validQuizzes.slice(0, 20);
+      return { success: true, message: 'Quizz généré avec succès.', data: validQuizzes.slice(0, 20) };
     } catch (error) {
-      console.error('Erreur lors de la génération du quiz :', error);
-      throw new Error(
-        "Une erreur est survenue lors de la génération du quiz par l'IA.",
-      );
+      return { success: false, message: "Erreur lors de la génération des quiz." };
     }
   }
 }
