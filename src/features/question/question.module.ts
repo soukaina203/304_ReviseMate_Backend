@@ -1,9 +1,17 @@
 import { Module } from '@nestjs/common';
-import { SuperModule } from '../../super/super.module';
-import { QuestionSchema } from '../../schemas/question.schema';
+import { MongooseModule } from '@nestjs/mongoose';
+import { QuestionController } from './question.controller';
+import { QuestionService } from './question.service';
+import { Question, QuestionSchema } from '../../schemas/question.schema';
+import { QuizModule } from '../quiz/quiz.module'; // Importez le QuizModule
 
 @Module({
-  imports: [SuperModule.forFeature(QuestionSchema, 'Question')],
-  exports: [SuperModule],
+  imports: [
+    MongooseModule.forFeature([{ name: Question.name, schema: QuestionSchema }]),
+    QuizModule, // Importez le QuizModule ici
+  ],
+  controllers: [QuestionController],
+  providers: [QuestionService],
+  exports: [QuestionService], // Exporter le service pour l'utiliser ailleurs si besoin
 })
 export class QuestionModule {}

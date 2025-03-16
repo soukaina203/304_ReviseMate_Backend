@@ -1,8 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Types, Schema as MongooseSchema } from 'mongoose';
-;
 
-@Schema({ collection: 'question' })
+@Schema({ collection: 'question' })  // Collection de questions
 export class Question extends Document {
   @Prop({ required: true })
   question: string;
@@ -25,7 +24,7 @@ export class Question extends Document {
   @Prop({
     type: MongooseSchema.Types.ObjectId,
     required: false,
-    ref: 'id_quiz',
+    ref: 'Quiz',  // Référence au modèle 'Quiz'
   })
   id_quiz: Types.ObjectId;
 }

@@ -34,7 +34,7 @@ export class SuperModule {
         },
       ],
       controllers: [SuperController],
-      exports: [SuperService],
+      exports: [SuperService, MongooseModule], // Exportez MongooseModule ici
     };
   }
 }
