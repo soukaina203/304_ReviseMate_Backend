@@ -1,14 +1,12 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document, Schema as MongooseSchema, Types } from "mongoose";
-
-export type QuizDocument = Quiz & Document;
+import { Document, Schema as MongooseSchema, Types } from 'mongoose';
 
 @Schema({ collection: 'quiz' })
-export class Quiz {
+export class Quiz extends Document {
   @Prop({ required: true })
   titre: string;
 
-  @Prop({ required: false }) // Optionnel selon l'utilisation
+  @Prop({ required: false })
   id_fiche: string;
 
   @Prop({
@@ -17,6 +15,9 @@ export class Quiz {
     ref: 'id_utilisateur',
   })
   id_utilisateur: Types.ObjectId;
+
+  @Prop({ default: [] })
+  scores: { userId: Types.ObjectId; correctAnswers: number; totalQuestions: number; date: Date }[];
 }
 
 export const QuizSchema = SchemaFactory.createForClass(Quiz);
