@@ -35,17 +35,19 @@ export class AuthService {
   
   // Add the register() method to the AuthService class. | Ajouter la méthode register() à la classe AuthService.
   async register(registerDto: RegisterDto): Promise<User | null> {
-    const { firstName, lastName, email, password } = registerDto;
+    const { firstName, lastName, email, password, id_role } = registerDto;
 
-    // Vérifier si l'utilisateur existe déjà dans la base de données 
+    // Vérifier si l'utilisateur existe déjà
     const existingUser = await this.userModel.findOne({ email }).exec();
-
     if (existingUser) {
-      return null; // Utilisateur déjà existant
+      return null;
     }
 
     // Hacher le mot de passe
     const hashedPassword = await bcrypt.hash(password, 12);
+
+    // Utiliser l'id_role fourni ou attribuer le rôle par défaut (étudiant)
+    const roleId = id_role ?? '67c8621008049ddd39d069f1';
 
     // Créer un nouvel utilisateur
     const newUser = new this.userModel({
@@ -53,12 +55,12 @@ export class AuthService {
       lastName,
       email,
       password: hashedPassword,
+      id_role: roleId,
       createdAt: new Date(),
     });
 
-    // Sauvegarder l'utilisateur dans la base de données
-    return newUser.save(); // Retourne l'utilisateur créé
-  }
+    return newUser.save();
+}
 
 
   async login(email: string, password: string): Promise<UserDocument | null> {

@@ -22,20 +22,20 @@ export class AuthController {
   @Post('register')
   async register(@Body() registerDto: RegisterDto, @Req() req: Request) {
     const user = await this.authService.register(registerDto);
-    //Vérifie si l'utilisateur existe déjà | Check if the user already exists
+    
     if (!user) {
       return { message: 'Un compte existe déjà avec cette adresse mail.' };
     }
 
-    // Vérifie si la session est active | Check if the session is active
     if (!req.session) {
       return { message: "La session n'est pas active." };
     }
 
-    // Enregistrer l'utilisateur en session | Register the user in session
-    req.session.user = { id: user.id, email: user.email };
+    
+    req.session.user = { id: user.id, email: user.email, id_role: user.id_role ?? '67c8621008049ddd39d069f1' };
+
     return { message: 'Inscription réussie', user: req.session.user };
-  }
+}
 
   // Méthode pour vérifier si le code est correct
   @Post('verifyCode')
