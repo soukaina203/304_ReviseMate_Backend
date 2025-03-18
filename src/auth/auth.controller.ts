@@ -31,8 +31,7 @@ export class AuthController {
       return { message: "La session n'est pas active." };
     }
 
-    
-    req.session.user = { id: user.id, email: user.email, id_role: user.id_role ?? '67c8621008049ddd39d069f1' };
+    req.session.user = { id: user.id, email: user.email, id_role: user.id_role ?? '67c8621008049ddd39d069f1' } as SessionUser;
 
     return { message: 'Inscription réussie', user: req.session.user };
 }
@@ -69,7 +68,7 @@ export class AuthController {
     }
 
     // Register the user in session  | Enregistrer l'utilisateur en session
-    req.session.user = { id: user.id, email: user.email, id_role: user.id_role } as SessionUser;
+    req.session.user = { id: user.id, email: user.email, id_role: user.id_role, } as SessionUser;
     return { message: 'Connexion réussie', user: req.session.user };
   }
 
