@@ -9,12 +9,15 @@ import {
 import { FileInterceptor } from '@nestjs/platform-express';
 import { QuizzesService } from './quizzes.service';
 import * as pdfParse from 'pdf-parse';
+import { AuthGuard } from '../guards/auth.guard';
+import { UseGuards } from '@nestjs/common';
 
 @Controller('quizzes')
 export class QuizzesController {
   constructor(private readonly quizzesService: QuizzesService) {}
 
   @Post('')
+  @UseGuards(AuthGuard)
   async generateQuizzes(@Body() { content }: { content: string }) {
     try {
       const quizzes = await this.quizzesService.generateQuizzes(content);
@@ -27,6 +30,7 @@ export class QuizzesController {
   }
 
   @Post('pdf')
+  @UseGuards(AuthGuard)
   @UseInterceptors(FileInterceptor('file'))
   async generateQuizzesFromPdf(@UploadedFile() file: Express.Multer.File) {
     try {
