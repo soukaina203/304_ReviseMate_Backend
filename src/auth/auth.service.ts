@@ -35,7 +35,7 @@ export class AuthService {
   
   // Add the register() method to the AuthService class. | Ajouter la méthode register() à la classe AuthService.
   async register(registerDto: RegisterDto): Promise<User | null> {
-    const { firstName, lastName, email, password, id_role } = registerDto;
+    const { firstName, lastName, email, password, id_role, code_prof } = registerDto;
 
     // Vérifier si l'utilisateur existe déjà
     const existingUser = await this.userModel.findOne({ email }).exec();
@@ -47,8 +47,11 @@ export class AuthService {
     const hashedPassword = await bcrypt.hash(password, 12);
 
     // Utiliser l'id_role fourni ou attribuer le rôle par défaut (étudiant)
-    const roleId = id_role ?? '67c8621008049ddd39d069f1';
+    let roleId = '67c8621008049ddd39d069f1'; // ID du rôle étudiant
 
+    if (code_prof && Number(code_prof) === 4569852) {
+      roleId = '67bde3d6d528fe1ec83f0316';
+    }
     // Créer un nouvel utilisateur
     const newUser = new this.userModel({
       firstName,

@@ -15,4 +15,7 @@ export class RegisterDto {
 
   @IsOptional() // Rend le champ facultatif
   id_role?: string;
+
+  @IsOptional()
+  code_prof?: number;
 }
