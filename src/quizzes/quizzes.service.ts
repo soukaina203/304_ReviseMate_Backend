@@ -19,21 +19,21 @@ export class QuizzesService {
     }[];
   }> {
     const prompt = `
-    Génère exactement 20 questions sur ce texte. Pour chaque question, donne :
-    - Une bonne réponse.
-    - Trois mauvaises réponses.
+Génère exactement 20 questions en français sur ce texte, avec :
+- Une bonne réponse.
+- Trois mauvaises réponses.
 
-    Format de réponse JSON strict :
-    [
-      {
-        "question": "ta question",
-        "correct_answer": "bonne réponse",
-        "incorrect_answers": ["mauvaise 1", "mauvaise 2", "mauvaise 3"]
-      },
-      ...
-    ]
-    
-    Texte source : ${content}`;
+Réponse en format JSON strict (20 objets) :
+[
+  {
+    "question": "ta question",
+    "correct_answer": "bonne réponse",
+    "incorrect_answers": ["mauvaise 1", "mauvaise 2", "mauvaise 3"]
+  },
+  ...
+]
+
+Texte : ${content}`;
 
     try {
       const response = await firstValueFrom(
