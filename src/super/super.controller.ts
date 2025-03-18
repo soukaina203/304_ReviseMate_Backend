@@ -27,6 +27,7 @@ export class SuperController<T> {
     @Inject(getModelToken('Classe')) private readonly classeModel: Model<T>,
     @Inject(getModelToken('Carte_memoire'))
     private readonly carte_memoireModel: Model<T>,
+    @Inject(getModelToken('Role')) private readonly roleModel: Model<T>,
   ) {}
 
   private getModel(name: string): Model<T> {
@@ -36,6 +37,7 @@ export class SuperController<T> {
     if (name === 'user') return this.userModel;
     if (name === 'classe') return this.classeModel;
     if (name === 'carte_memoire') return this.carte_memoireModel;
+    if (name === 'role') return this.roleModel;
     throw new Error(`Modèle inconnu: ${name}`);
   }
 

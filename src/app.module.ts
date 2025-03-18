@@ -15,6 +15,7 @@ import { Carte_memoireModule } from './features/carte_memoire/carte_memoire.modu
 import { FlashcardModule } from './flashcard/flashcard.module';
 import { QuizzesModule } from './quizzes/quizzes.module';
 import { AdminModule } from './admin/admin.module';
+import { RoleModule } from './features/role/role.module';
 
 @Module({
   imports: [
@@ -42,6 +43,7 @@ import { AdminModule } from './admin/admin.module';
     FlashcardModule,
     QuizzesModule,
     AdminModule,
+    RoleModule,
   ],
   controllers: [AppController],
   providers: [AppService],
