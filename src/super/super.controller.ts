@@ -13,6 +13,8 @@ import {
 import { SuperService } from './super.service';
 import { getModelToken } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import { AuthGuard } from '../guards/auth.guard';
+import { UseGuards } from '@nestjs/common';
 
 @Controller('super/:name')
 export class SuperController<T> {
@@ -42,6 +44,7 @@ export class SuperController<T> {
   }
 
   @Get()
+  @UseGuards(AuthGuard)
   async findAll(@Param('name') name: string): Promise<{
     success: boolean;
     message: string;
@@ -64,6 +67,7 @@ export class SuperController<T> {
   }
 
   @Get(':id')
+  //@UseGuards(AuthGuard)
   async findOne(
     @Param('name') name: string,
     @Param('id') id: string,
@@ -95,6 +99,7 @@ export class SuperController<T> {
   }
 
   @Post()
+  @UseGuards(AuthGuard)
   async create(
     @Param('name') name: string,
     @Body() data: T,
@@ -123,6 +128,7 @@ export class SuperController<T> {
   }
 
   @Patch(':id')
+  @UseGuards(AuthGuard)
   async update(
     @Param('name') name: string,
     @Param('id') id: string,
@@ -159,6 +165,7 @@ export class SuperController<T> {
   }
 
   @Delete(':id')
+  @UseGuards(AuthGuard)
   async delete(
     @Param('name') name: string,
     @Param('id') id: string,
