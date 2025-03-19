@@ -10,7 +10,10 @@ import { UserModule } from '../features/user/user.module';
 import { CodeProfSchema } from '../schemas/code_prof.schema';
 import { SuperModule } from '../super/super.module';
 import { Model } from 'mongoose';
-import { RoleGuard } from '../guards/role.guard'; 
+import { RoleGuard } from '../guards/role.guard';
+
+// Assurez-vous d'importer votre schéma CarteMemoire ici
+import { CarteMemoireSchema } from '../schemas/carte_memoire.schema';  // Assurez-vous que ce fichier existe et contient le schéma
 
 @Module({
   imports: [
@@ -19,6 +22,8 @@ import { RoleGuard } from '../guards/role.guard';
     MongooseModule.forFeature([
       { name: 'User', schema: UserSchema },
       { name: 'Code_prof', schema: CodeProfSchema },
+      // Ajoutez ici le modèle CarteMemoire
+      { name: 'CarteMemoire', schema: CarteMemoireSchema },  // Ajoutez cette ligne
     ]),
   ],
   controllers: [AdminController],
