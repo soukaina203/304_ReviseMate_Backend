@@ -65,7 +65,7 @@ export class SuperController<T> {
   }
 
   @Get(':id')
-  @UseGuards(AuthGuard)
+  //@UseGuards(AuthGuard)
   async findOne(
     @Param('name') name: string,
     @Param('id') id: string,
