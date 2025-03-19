@@ -14,7 +14,7 @@ export class RegisterDto {
   password: string;
 
   @IsOptional() // Rend le champ facultatif
-  id_role?: string;
+  role: 'étudiant' | 'professeur';
 
   @IsOptional()
   code_prof?: number;

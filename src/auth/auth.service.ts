@@ -35,23 +35,29 @@ export class AuthService {
   
   // Add the register() method to the AuthService class. | Ajouter la méthode register() à la classe AuthService.
   async register(registerDto: RegisterDto): Promise<User | null> {
-    const { firstName, lastName, email, password, id_role, code_prof } = registerDto;
-
+    const { firstName, lastName, email, password, role, code_prof } = registerDto;
+  
     // Vérifier si l'utilisateur existe déjà
     const existingUser = await this.userModel.findOne({ email }).exec();
     if (existingUser) {
       return null;
     }
-
+  
     // Hacher le mot de passe
     const hashedPassword = await bcrypt.hash(password, 12);
-
-    // Utiliser l'id_role fourni ou attribuer le rôle par défaut (étudiant)
-    let roleId = '67c8621008049ddd39d069f1'; // ID du rôle étudiant
-
-    if (code_prof && Number(code_prof) === 4569852) {
-      roleId = '67bde3d6d528fe1ec83f0316';
+  
+    // Définir l'ID du rôle en fonction du rôle fourni
+    let roleId: string;
+  
+    if (role === 'professeur') {
+      if (!code_prof || !(await this.isCodeValid(Number(code_prof)))) {
+        throw new Error('Code de sécurité invalide pour les professeurs.');
+      }
+      roleId = '67bde3d6d528fe1ec83f0316'; // ID du rôle professeur
+    } else {
+      roleId = '67c8621008049ddd39d069f1'; // ID du rôle étudiant (par défaut)
     }
+  
     // Créer un nouvel utilisateur
     const newUser = new this.userModel({
       firstName,
@@ -61,9 +67,11 @@ export class AuthService {
       id_role: roleId,
       createdAt: new Date(),
     });
-
+  
     return newUser.save();
-}
+  }
+  
+  
 
 
   async login(email: string, password: string): Promise<UserDocument | null> {

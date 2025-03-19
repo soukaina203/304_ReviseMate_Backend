@@ -23,20 +23,29 @@ export class AuthController {
   // Add the register() method to the AuthController class. | Ajouter la méthode register() à la classe
   @Post('register')
   async register(@Body() registerDto: RegisterDto, @Req() req: Request) {
-    const user = await this.authService.register(registerDto);
-    
-    if (!user) {
-      return { message: 'Un compte existe déjà avec cette adresse mail.' };
+    try {
+      const user = await this.authService.register(registerDto);
+  
+      if (!user) {
+        return { message: 'Un compte existe déjà avec cette adresse mail.' };
+      }
+  
+      if (!req.session) {
+        return { message: "La session n'est pas active." };
+      }
+  
+      req.session.user = { id: user.id, email: user.email, id_role: user.id_role ?? '67c8621008049ddd39d069f1' } as SessionUser;
+  
+      return { message: 'Inscription réussie', user: req.session.user };
+    } catch (error) {
+      if (error.message === 'Code de sécurité invalide pour les professeurs.') {
+        return { message: 'Le code prof n\'est pas valide.' };
+      }
+      // Gérer d'autres erreurs potentielles ici
+      return { message: 'Une erreur est survenue lors de l\'inscription.' };
     }
-
-    if (!req.session) {
-      return { message: "La session n'est pas active." };
-    }
-
-    req.session.user = { id: user.id, email: user.email, id_role: user.id_role ?? '67c8621008049ddd39d069f1' } as SessionUser;
-
-    return { message: 'Inscription réussie', user: req.session.user };
   }
+  
 
 
   // Méthode pour vérifier si le code est correct
