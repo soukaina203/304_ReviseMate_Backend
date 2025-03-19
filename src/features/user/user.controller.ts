@@ -16,9 +16,9 @@ export class UserController {
     return this.userService.update(id, updateUserDto);
   }
 
-  @Get(':id/details')
-  //@UseGuards(AuthGuard)
-  async getEtudiantWithDetails(@Param('id') id: string) {
-    return this.userService.getEtudiantWithDetails(id);
+  @Get('etudiants/details')
+  @UseGuards(AuthGuard)
+  async getAllEtudiantsWithDetails() {
+    return this.userService.getAllEtudiantsWithDetails();
   }
 }
