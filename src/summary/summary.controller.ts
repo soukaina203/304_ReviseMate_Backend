@@ -19,31 +19,20 @@ export class RevisionController {
   // Ajouter une route pour générer une fiche de révision à partir d'un texte
   @Post()
   @UseGuards(AuthGuard)
-async getRevisionSheet(@Body('text') text: string, @Body('customPrompt') customPrompt?: string) {
-  return { revisionSheet: await this.summaryService.createRevisionSheet(text, customPrompt) };
-}
-
-// Ajouter une route pour générer une fiche de révision à partir d'un fichier PDF
-@Post('pdf')
-@UseGuards(AuthGuard)
-@UseInterceptors(FileInterceptor('file'))
-async getRevisionSheetFromPdf(@UploadedFile() file: any, @Body('customPrompt') customPrompt?: string) {
-  // Vérifier si un fichier a été fourni
-  if (!file) {
-    throw new BadRequestException('Aucun fichier fourni.');
+  async getRevisionSheet(@Body('text') text: string, @Body('customPrompt') customPrompt?: string) {
+    return { revisionSheet: await this.summaryService.createRevisionSheet(text, customPrompt) };
   }
 
   // Ajouter une route pour générer une fiche de révision à partir d'un fichier PDF
   @Post('pdf')
+  @UseGuards(AuthGuard)
   @UseInterceptors(FileInterceptor('file'))
-  async getRevisionSheetFromPdf(
-    @UploadedFile() file: any,
-    @Body('customPrompt') customPrompt?: string,
-  ) {
+  async getRevisionSheetFromPdf(@UploadedFile() file: any, @Body('customPrompt') customPrompt?: string) {
     // Vérifier si un fichier a été fourni
     if (!file) {
       throw new BadRequestException('Aucun fichier fourni.');
     }
+
     // Extraire le texte du PDF
     try {
       const pdfText = await pdfParse(file.buffer);
@@ -52,7 +41,6 @@ async getRevisionSheetFromPdf(@UploadedFile() file: any, @Body('customPrompt') c
         customPrompt,
       );
       return { revisionSheet };
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
       throw new BadRequestException(
         'Erreur lors du traitement du fichier PDF.',
@@ -60,5 +48,3 @@ async getRevisionSheetFromPdf(@UploadedFile() file: any, @Body('customPrompt') c
     }
   }
 }
-
-export class SummaryController {}
