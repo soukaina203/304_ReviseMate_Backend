@@ -9,6 +9,9 @@ import { QuestionSchema } from '../schemas/question.schema';
 import { UserSchema } from '../schemas/user.schema';
 import { ClasseSchema } from '../schemas/classe.schema';
 import { CarteMemoireSchema } from '../schemas/carte_memoire.schema';
+import { RoleGuard } from '../guards/role.guard';
+import { AuthGuard } from '../guards/auth.guard';
+import { AuthModule } from '../auth/auth.module';
 import { RoleSchema } from '../schemas/role.schema';
 
 @Module({})
@@ -26,6 +29,7 @@ export class SuperModule {
           { name: 'Carte_memoire', schema: CarteMemoireSchema },
           { name: 'Role', schema: RoleSchema },
         ]),
+        AuthModule, 
       ],
       providers: [
         {
@@ -34,9 +38,11 @@ export class SuperModule {
             new SuperService<T>(modelInstance),
           inject: [getModelToken(name)],
         },
+        RoleGuard, 
+        AuthGuard, 
       ],
       controllers: [SuperController],
-      exports: [SuperService, MongooseModule], // Exportez MongooseModule ici
+      exports: [SuperService, MongooseModule], 
     };
   }
 }

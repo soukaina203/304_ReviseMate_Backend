@@ -10,6 +10,7 @@ import {
   InternalServerErrorException,
   Inject,
   BadRequestException,
+  UseGuards,  // Importer UseGuards
 } from '@nestjs/common';
 
 import { UserService } from '../features/user/user.service';
@@ -20,6 +21,8 @@ import { User } from '../schemas/user.schema';
 import { Model } from 'mongoose';
 import { RegisterDto } from '../auth/dto/register.dto';
 import { Update_userDto } from '../auth/dto/update_user.dto';
+import { Roles } from '../guards/roles.decorator';
+import { RoleGuard } from '../guards/role.guard';
 
 @Controller('admin/user')
 export class AdminController {
@@ -31,6 +34,8 @@ export class AdminController {
   ) {}
 
   @Get()
+  @UseGuards(RoleGuard)
+  @Roles('admin')  
   async getAllUsers() {
     try {
       const users = await this.superService.findAll(this.userModel);
@@ -39,7 +44,6 @@ export class AdminController {
         message: 'Liste des utilisateurs récupérée avec succès.',
         data: users,
       };
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
       throw new InternalServerErrorException(
         'Erreur lors de la récupération des utilisateurs',
@@ -48,6 +52,8 @@ export class AdminController {
   }
 
   @Get(':id')
+  @UseGuards(RoleGuard)
+  @Roles('admin')
   async getUserById(@Param('id') id: string) {
     const user = await this.superService.findOne(id, this.userModel);
     if (!user) {
@@ -59,7 +65,6 @@ export class AdminController {
         message: 'Utilisateur trouvé.',
         data: user,
       };
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
       throw new InternalServerErrorException(
         "Erreur lors de la récupération de l'utilisateur",
@@ -68,6 +73,7 @@ export class AdminController {
   }
 
   @Post()
+  @UseGuards(RoleGuard)  // Appliquer le RoleGuard pour cette route
   async createUser(@Body() createUserDto: RegisterDto) {
     const existingUser = await this.userModel
       .findOne({ email: createUserDto.email })
@@ -79,13 +85,11 @@ export class AdminController {
     }
     try {
       const newUser = await this.authService.register(createUserDto);
-
       return {
         success: true,
         message: 'Utilisateur créé avec succès.',
         data: newUser,
       };
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
       throw new InternalServerErrorException(
         "Erreur lors de la création de l'utilisateur",
@@ -94,6 +98,7 @@ export class AdminController {
   }
 
   @Patch(':id')
+  @UseGuards(RoleGuard)  // Appliquer le RoleGuard pour cette route
   async updateUser(
     @Param('id') id: string,
     @Body() updateUserDto: Update_userDto,
@@ -105,7 +110,6 @@ export class AdminController {
         message: 'Utilisateur mis à jour avec succès.',
         data: updatedUser,
       };
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
       throw new InternalServerErrorException(
         "Erreur lors de la mise à jour de l'utilisateur",
@@ -113,8 +117,8 @@ export class AdminController {
     }
   }
 
-  // DELETE user (optional: SuperService is fine)
   @Delete(':id')
+  @UseGuards(RoleGuard)  // Appliquer le RoleGuard pour cette route
   async deleteUser(@Param('id') id: string) {
     const deletedUser = await this.superService.delete(id, this.userModel);
     if (!deletedUser) {
@@ -126,7 +130,6 @@ export class AdminController {
         message: 'Utilisateur supprimé avec succès.',
         data: deletedUser,
       };
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
       throw new InternalServerErrorException(
         "Erreur lors de la suppression de l'utilisateur",

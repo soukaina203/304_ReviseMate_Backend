@@ -2,11 +2,12 @@ import { Module } from '@nestjs/common';
 import { SuperModule } from '../../super/super.module';
 import { QuizSchema } from '../../schemas/quiz.schema';
 import { QuizService } from './quiz.service'; 
-import { QuizController } from './quiz.controller'; 
+import { QuizController } from './quiz.controller';
+import { AuthGuard } from '../../guards/auth.guard';
 
 @Module({
   imports: [SuperModule.forFeature(QuizSchema, 'Quiz')],
-  providers: [QuizService], 
+  providers: [QuizService, AuthGuard], 
   controllers: [QuizController],
   exports: [SuperModule], 
 })

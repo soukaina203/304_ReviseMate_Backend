@@ -10,6 +10,7 @@ import { UserModule } from '../features/user/user.module';
 import { CodeProfSchema } from '../schemas/code_prof.schema';
 import { SuperModule } from '../super/super.module';
 import { Model } from 'mongoose';
+import { RoleGuard } from '../guards/role.guard'; 
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { Model } from 'mongoose';
     AdminService,
     AuthService,
     SuperService,
+    RoleGuard,
     UserService,
     {
       provide: SuperService,
