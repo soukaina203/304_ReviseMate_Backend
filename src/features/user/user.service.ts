@@ -44,25 +44,35 @@ export class UserService {
     //Retourne l'utilisateur mis à jour | Return the updated user
     return this.userModel.findById(cleanId);
   }
-  async getEtudiantWithDetails(id: string) {
+
+  
+  //Récupère tous les étudiants avec les détails de leurs quiz, fiches et cartes mémoire | Get all students with details of their quizzes, flashcards and memory cards
+  async getAllEtudiantsWithDetails(): Promise<any[]> {
     const etudiantRoleId = new Types.ObjectId('67c8621008049ddd39d069f1');
 
-    const user = await this.userModel.findOne({ _id: id, id_role: etudiantRoleId });
-
-    if (!user) {
-      throw new NotFoundException(`Étudiant avec l'ID ${id} non trouvé ou n'est pas un étudiant.`);
+    const etudiants = await this.userModel.find({ id_role: etudiantRoleId });
+    //Si aucun étudiant n'est trouvé | If no student is found
+    if (!etudiants || etudiants.length === 0) {
+      throw new NotFoundException(`Aucun étudiant trouvé.`);
     }
+    //Récupère les quiz, fiches et cartes mémoire de chaque étudiant | Get the quizzes, flashcards and memory cards of each student
+    const etudiantsWithDetails = await Promise.all(
+      etudiants.map(async (etudiant) => {
+        const quizCree = await this.quizModel.find({ id_utilisateur: etudiant._id });
+        const fiches = await this.ficheModel.find({ id_utilisateur: etudiant._id });
+        const cartes = await this.carteMemoireModel.find({ id_utilisateur: etudiant._id });
 
-    const quizCree = await this.quizModel.find({ id_utilisateur: id });
-    const fiches = await this.ficheModel.find({ id_utilisateur: id });
-    const cartes = await this.carteMemoireModel.find({ id_utilisateur: id });
+        //Retourne l'étudiant avec les détails | Return the student with details
+        return {
+          ...etudiant.toObject(),
+          quizCree,
+          fiches,
+          cartes,
+        };
+      })
+    );
 
-    return {
-      ...user.toObject(),
-      quizCree,
-      fiches,
-      cartes,
-    };
+    return etudiantsWithDetails;
   }
-  
 }
+
