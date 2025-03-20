@@ -97,6 +97,11 @@ export class AuthService {
       '67c8621008049ddd39d069f2': 'admin', 
     };
   
+    // Vérifie si user.id_role est défini avant de le convertir en string
+    if (!user.id_role) {
+      return { user, role: null }; // Pas de rôle associé à l'utilisateur
+    }
+  
     // Convertir l'ObjectId en string pour l'utiliser comme clé
     const roleIdString = user.id_role.toString();
   
@@ -105,7 +110,6 @@ export class AuthService {
   
     return { user, role }; // Utilisateur trouvé et mot de passe valide
   }
-  
   
   
 }
