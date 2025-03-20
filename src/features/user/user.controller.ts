@@ -3,6 +3,8 @@ import { UserService } from './user.service';
 import { Update_userDto } from '../../auth/dto/update_user.dto';
 import { User } from '../../schemas/user.schema';
 import { AuthGuard } from '../../guards/auth.guard';
+import { Roles } from '../../guards/roles.decorator';
+import { RoleGuard } from '../../guards/role.guard';
 import { UseGuards } from '@nestjs/common';
 
 @Controller('super/user')
@@ -17,7 +19,8 @@ export class UserController {
   }
 
   @Get('etudiants/details')
-  @UseGuards(AuthGuard)
+  @UseGuards(AuthGuard, RoleGuard)  
+  @Roles('prof')
   async getAllEtudiantsWithDetails() {
     return this.userService.getAllEtudiantsWithDetails();
   }
