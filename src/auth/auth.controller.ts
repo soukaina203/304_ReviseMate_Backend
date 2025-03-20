@@ -11,6 +11,7 @@ interface SessionUser {
   id: string;
   email: string;
   id_role: any;
+  role?: string;
 }
 // Add the @Controller() decorator to the AuthController class. | Ajouter le décorateur @Controller() à la classe AuthController.
 @Controller('auth')
@@ -95,7 +96,6 @@ async login(@Body() loginDto: LoginDto, @Req() req: Request) {
 
   // Add the logout() method to the AuthController class. | Ajouter la méthode logout() à la classe AuthController.
   @Post('logout')
-  @UseGuards(AuthGuard) 
   logout(@Req() req: Request) {
     (req.session as any).destroy((err: any) => {
       if (err) {
