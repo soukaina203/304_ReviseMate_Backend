@@ -23,6 +23,7 @@ import { RegisterDto } from '../auth/dto/register.dto';
 import { Update_userDto } from '../auth/dto/update_user.dto';
 import { Roles } from '../guards/roles.decorator';
 import { RoleGuard } from '../guards/role.guard';
+import { AuthGuard } from '../guards/auth.guard';
 
 @Controller('admin/user')
 export class AdminController {
@@ -34,7 +35,7 @@ export class AdminController {
   ) {}
 
   @Get()
-  @UseGuards(RoleGuard)
+  @UseGuards(AuthGuard, RoleGuard)
   @Roles('admin')  
   async getAllUsers() {
     try {
@@ -52,7 +53,7 @@ export class AdminController {
   }
 
   @Get(':id')
-  @UseGuards(RoleGuard)
+  @UseGuards(AuthGuard, RoleGuard)
   @Roles('admin')
   async getUserById(@Param('id') id: string) {
     const user = await this.superService.findOne(id, this.userModel);
@@ -73,7 +74,7 @@ export class AdminController {
   }
 
   @Post()
-  @UseGuards(RoleGuard)  // Appliquer le RoleGuard pour cette route
+  @UseGuards(AuthGuard, RoleGuard) 
   async createUser(@Body() createUserDto: RegisterDto) {
     const existingUser = await this.userModel
       .findOne({ email: createUserDto.email })
@@ -98,7 +99,7 @@ export class AdminController {
   }
 
   @Patch(':id')
-  @UseGuards(RoleGuard)  // Appliquer le RoleGuard pour cette route
+  @UseGuards(AuthGuard, RoleGuard)  
   async updateUser(
     @Param('id') id: string,
     @Body() updateUserDto: Update_userDto,
@@ -118,7 +119,7 @@ export class AdminController {
   }
 
   @Delete(':id')
-  @UseGuards(RoleGuard)  // Appliquer le RoleGuard pour cette route
+  @UseGuards(AuthGuard, RoleGuard)  
   async deleteUser(@Param('id') id: string) {
     const deletedUser = await this.superService.delete(id, this.userModel);
     if (!deletedUser) {
