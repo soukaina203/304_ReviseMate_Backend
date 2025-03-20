@@ -74,22 +74,38 @@ export class AuthService {
   
 
 
-  async login(email: string, password: string): Promise<UserDocument | null> {
+  async login(email: string, password: string): Promise<{ user: UserDocument | null, role: string | null }> {
     // Recherche l'utilisateur dans la base de données par email
     const user = await this.userModel.findOne({ email }).exec();
-
+  
     // Vérifie si l'utilisateur existe
     if (!user) {
-      return null; // Utilisateur non trouvé
+      return { user: null, role: null }; // Utilisateur non trouvé
     }
-
+  
     // Vérifie si le mot de passe est correct
     const isPasswordValid = await bcrypt.compare(password, user.password);
-
+  
     if (!isPasswordValid) {
-      return null; // Mot de passe incorrect
+      return { user: null, role: null }; // Mot de passe incorrect
     }
-
-    return user; // Utilisateur trouvé et mot de passe valide
+  
+    // Mapper les IDs de rôle à leurs noms respectifs
+    const roleMapping: { [key: string]: string } = {
+      '67bde3d6d528fe1ec83f0316': 'professeur',
+      '67c8621008049ddd39d069f1': 'étudiant',
+      '67c8621008049ddd39d069f2': 'admin', 
+    };
+  
+    // Convertir l'ObjectId en string pour l'utiliser comme clé
+    const roleIdString = user.id_role.toString();
+  
+    // Obtenir le nom du rôle à partir de l'ID
+    const role = roleMapping[roleIdString];
+  
+    return { user, role }; // Utilisateur trouvé et mot de passe valide
   }
+  
+  
+  
 }

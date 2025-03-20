@@ -63,21 +63,35 @@ export class AuthController {
   
   // Add the login() method to the AuthController class. | Ajouter la méthode login() à la classe AuthController.
   @Post('login')
-  async login(@Body() loginDto: LoginDto, @Req() req: Request) {
-    const { email, password } = loginDto;
+async login(@Body() loginDto: LoginDto, @Req() req: Request) {
+  const { email, password } = loginDto;
 
-    const user = await this.authService.login(email, password);
-    if (!user) {
-      return { message: 'Identifiants incorrects' };
-    }
+  // Appeler le service d'authentification pour obtenir l'utilisateur et le nom du rôle
+  const { user, role } = await this.authService.login(email, password);
 
-    if (!req.session) {
-      return { message: "La session n'est pas active." };
-    }
-
-    req.session.user = { id: user.id, email: user.email, id_role: user.id_role } as SessionUser;
-    return { message: 'Connexion réussie', user: req.session.user };
+  // Vérifier si l'utilisateur existe
+  if (!user) {
+    return { message: 'Identifiants incorrects' };
   }
+
+  // Vérifier si la session est active
+  if (!req.session) {
+    return { message: "La session n'est pas active." };
+  }
+
+  // Stocker les informations de l'utilisateur dans la session
+  req.session.user = {
+    id: user._id,
+    email: user.email,
+    id_role: user.id_role,
+    role: role, 
+  } as SessionUser;
+
+  // Retourner un message de succès avec les informations de l'utilisateur
+  return { message: 'Connexion réussie', user: req.session.user };
+}
+
+
 
   // Add the logout() method to the AuthController class. | Ajouter la méthode logout() à la classe AuthController.
   @Post('logout')
