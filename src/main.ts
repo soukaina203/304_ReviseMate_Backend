@@ -1,27 +1,30 @@
-/* eslint-disable prettier/prettier */
 import { NestFactory } from '@nestjs/core';
 import * as session from 'express-session';
 import { AppModule } from './app.module';
 import * as process from 'node:process';
 import { ConsoleLogger } from "@nestjs/common";
+import * as cookieParser from 'cookie-parser';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule,
-    { logger: new ConsoleLogger() });
+  const app = await NestFactory.create(AppModule, {
+    logger: new ConsoleLogger(),
+  });
 
-  // configuration de la session | session configuration
+
+  // Configuration de la session
   app.use(
     session({
       secret: 'S3cr3tK3y!2025',
       resave: false,
       saveUninitialized: false,
-      cookie: { secure: false, httpOnly: true },
+      cookie: { secure: false, httpOnly: true},
+      
     }),
   );
 
-  // connexion vers le frontend | connection to the frontend
+  // Connexion vers le frontend
   app.enableCors({
-    origin: '*',
+    origin: 'http://localhost:4200', 
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true,
   });
@@ -30,4 +33,5 @@ async function bootstrap() {
   await app.listen(port);
   console.log(`Serveur lancé sur http://localhost:${port}`);
 }
+
 bootstrap();
