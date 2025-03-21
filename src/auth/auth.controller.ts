@@ -11,7 +11,7 @@ interface SessionUser {
   id: string;
   email: string;
   id_role: any;
-  role?: string;
+  role: string;
 }
 // Add the @Controller() decorator to the AuthController class. | Ajouter le décorateur @Controller() à la classe AuthController.
 @Controller('auth')

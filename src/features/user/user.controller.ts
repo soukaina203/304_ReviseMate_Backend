@@ -20,7 +20,7 @@ export class UserController {
 
   @Get('etudiants/details')
   @UseGuards(AuthGuard, RoleGuard)  
-  @Roles('prof')
+  @Roles('professeur', 'admin')
   async getAllEtudiantsWithDetails() {
     return this.userService.getAllEtudiantsWithDetails();
   }
