@@ -20,7 +20,7 @@ export class UserService {
     @InjectModel(CarteMemoire.name) private readonly carteMemoireModel: Model<CarteMemoire>,
   ) {}
 
-
+//Mettre à jour un utilisateur | Update a user
   async update(id: string, updateUserDto: Update_userDto): Promise<User> {
     this.logger.log(`Mise à jour de l'utilisateur avec l'ID : ${id}`);
 
