@@ -11,7 +11,8 @@ export class FlashcardService {
 
   async generateFlashcards(content: string): Promise<{ success: boolean, message: string, data?: { question: string, réponse: string }[] }> {
     // Prompt pour l'API avec instruction de langue
-    const prompt = `Crée jusqu'à 20 questions et leurs réponses en français à partir du texte suivant, sans inclure les mots "question" ou "réponse" dans les réponses : ${content}`;
+    const prompt = `Crée jusqu'à 20 questions et leurs réponses en français à partir du texte suivant. Chaque réponse ne doit pas dépasser 20 mots. Ne pas inclure les mots "question" ou "réponse" dans les réponses : ${content}`;
+
 
     try {
       const response = await firstValueFrom(
