@@ -1,7 +1,7 @@
 #!groovy
 node {
   def apps = [
-    [name: "reviseMate-api", port: '5000', exposed_port: '', path: '', domaine: "reviseMate-api.cloud.dev-solus.com", volume: "/wwwroot",domaine_prefix: ''],
+    [name: "revisemate-api", port: '5000', exposed_port: '', path: '', domaine: "reviseMate-api.cloud.dev-solus.com", volume: "/wwwroot",domaine_prefix: ''],
   ];
 
   def app
