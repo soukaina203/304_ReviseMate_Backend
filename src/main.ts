@@ -9,7 +9,12 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
     logger: new ConsoleLogger(),
   });
-
+  // Connexion vers le frontend
+  app.enableCors({
+    origin: ['http://localhost:4200','https://revisemate.cloud.dev-solus.com'], 
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    credentials: true,
+  });
 
   // Configuration de la session
   app.use(
@@ -22,12 +27,7 @@ async function bootstrap() {
     }),
   );
 
-  // Connexion vers le frontend
-  app.enableCors({
-    origin: ['http://localhost:4200','https://revisemate.cloud.dev-solus.com'], 
-    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-    credentials: true,
-  });
+
 
   const port = process.env.PORT ?? 3000;
   await app.listen(port);
