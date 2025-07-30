@@ -24,7 +24,7 @@ async function bootstrap() {
 
   // Connexion vers le frontend
   app.enableCors({
-    origin: 'http://localhost:4200', 
+    origin: ['http://localhost:4200','https://revisemate.cloud.dev-solus.com'], 
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true,
   });
