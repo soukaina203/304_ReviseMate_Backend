@@ -1,37 +1,16 @@
 import { NestFactory } from '@nestjs/core';
-import * as session from 'express-session';
 import { AppModule } from './app.module';
-import * as process from 'node:process';
-import { ConsoleLogger } from "@nestjs/common";
-import * as cookieParser from 'cookie-parser';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule, {
-    logger: new ConsoleLogger(),
-  });
-  // Connexion vers le frontend
-  app.enableCors({
-    origin: ['http://localhost:4200','https://revisemate.cloud.dev-solus.com'], 
+  const app = await NestFactory.create(AppModule);
+   // Enable CORS
+   app.enableCors({
+    origin: 'http://localhost:4200', // Allow requests from your Angular app
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-    credentials: true,
+    credentials: true, // Allow cookies and credentials
   });
-
-  // Configuration de la session
-  app.use(
-    session({
-      secret: 'S3cr3tK3y!2025',
-      resave: false,
-      saveUninitialized: false,
-      cookie: { secure: false, httpOnly: true},
-      
-    }),
-  );
-
-
-
-  const port = process.env.PORT ?? 3000;
-  await app.listen(port);
-  console.log(`Serveur lancé sur http://localhost:${port}`);
+  await app.listen(process.env.PORT ?? 3000);
 }
-
 bootstrap();
+
+;
