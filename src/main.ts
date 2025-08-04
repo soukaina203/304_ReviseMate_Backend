@@ -5,7 +5,7 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
    // Enable CORS
    app.enableCors({
-    origin: ['http://localhost:4200','https://revisemate.cloud.dev-solus.com'], // Allow requests from your Angular app
+    origin:'*', // Allow requests from your Angular app
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true, // Allow cookies and credentials
   });
