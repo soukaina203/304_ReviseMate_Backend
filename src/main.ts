@@ -7,7 +7,7 @@ async function bootstrap() {
    app.enableCors({
     origin:'*', // Allow requests from your Angular app
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-    credentials: true, // Allow cookies and credentials
+    credentials: false, // Allow cookies and credentials
   });
   await app.listen(process.env.PORT ?? 3000);
 }
