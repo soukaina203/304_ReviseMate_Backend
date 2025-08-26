@@ -64,7 +64,7 @@ export class AuthController {
   
   // Add the login() method to the AuthController class. | Ajouter la méthode login() à la classe AuthController.
   @Post('login')
-async login(@Body() loginDto: LoginDto, @Req() req: Request) {
+  async login(@Body() loginDto: LoginDto, @Req() req: Request) {
   const { email, password } = loginDto;
 
   // Appeler le service d'authentification pour obtenir l'utilisateur et le nom du rôle
