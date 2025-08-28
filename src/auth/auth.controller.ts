@@ -31,9 +31,7 @@ export class AuthController {
         return { message: 'Un compte existe déjà avec cette adresse mail.' };
       }
   
-      if (!req.session) {
-        return { message: "La session n'est pas active." };
-      }
+
   
       req.session.user = { id: user.id, email: user.email, id_role: user.id_role ?? '67c8621008049ddd39d069f1' } as SessionUser;
   
