@@ -73,10 +73,7 @@ export class AuthController {
     return { message: 'Identifiants incorrects' };
   }
 
-  // Vérifier si la session est active
-  if (!req.session) {
-    return { message: "La session n'est pas active." };
-  }
+
 
   // Stocker les informations de l'utilisateur dans la session
   req.session.user = {
