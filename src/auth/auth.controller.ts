@@ -47,7 +47,8 @@ export class AuthController {
   
 
 
-  // Méthode pour vérifier si le code est correct
+
+@Post('login')
   @Post('verifyCode')
   async verifyCode(@Body() { code }: { code: number }) {
     const isValid = await this.authService.isCodeValid(code);
