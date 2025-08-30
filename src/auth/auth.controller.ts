@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import { Controller, Post, Body, Req } from '@nestjs/common';
+import { Controller, Post, Body, Req, HttpException, HttpStatus } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
@@ -47,8 +47,7 @@ export class AuthController {
   
 
 
-
-@Post('login')
+  // Méthode pour vérifier si le code est correct
   @Post('verifyCode')
   async verifyCode(@Body() { code }: { code: number }) {
     const isValid = await this.authService.isCodeValid(code);
@@ -60,8 +59,8 @@ export class AuthController {
     }
   }
 
-  
-async login(@Body() loginDto: LoginDto, @Req() req: Request) {
+ @Post('login')
+ async login(@Body() loginDto: LoginDto, @Req() req: Request) {
   try {
     const { email, password } = loginDto;
 
