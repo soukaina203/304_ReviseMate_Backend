@@ -10,7 +10,7 @@ import { JwtModule } from '@nestjs/jwt';
 @Module({
   // Add the MongooseModule.forFeature() method to the imports array to import the User model. | Pour importer le modèle User, on ajoute la méthode MongooseModule.forFeature() au tableau des imports.
   imports: [
-     JwtModule.register({
+    JwtModule.register({
       global: true,
       secret: process.env.JWT_SECRET || 'secret_key',
       signOptions: { expiresIn: '1h' },

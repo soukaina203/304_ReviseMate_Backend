@@ -31,7 +31,6 @@ export class AuthController {
         id: user.id,
         email: user.email,
         id_role: user.id_role ?? '67c8621008049ddd39d069f1',
-        role: user.role ?? 'student',
       });
 
       return {
@@ -42,7 +41,6 @@ export class AuthController {
           id: user.id,
           email: user.email,
           id_role: user.id_role,
-          role: user.role,
         },
       };
     } catch (error) {
