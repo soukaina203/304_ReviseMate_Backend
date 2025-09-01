@@ -1,116 +1,127 @@
 /* eslint-disable prettier/prettier */
-import { Controller, Post, Body, Req, HttpException, HttpStatus } from '@nestjs/common';
+import { Controller, Post, Body, HttpException, HttpStatus, UseGuards, Get, Req } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
-import { Request } from 'express';
-import { AuthGuard } from '../guards/auth.guard';
-import { UseGuards } from '@nestjs/common';
+import { JwtAuthGuard } from '../guards/jwt.guard';
 
-interface SessionUser {
-  id: string;
-  email: string;
-  id_role: any;
-  role: string;
+interface AuthResponse {
+  success: boolean;
+  message: string;
+  token?: string;
+  user?: any;
 }
-// Add the @Controller() decorator to the AuthController class. | Ajouter le décorateur @Controller() à la classe AuthController.
-@Controller('auth')
 
-// Add the AuthController class. | Ajouter la classe AuthController.
+@Controller('auth')
 export class AuthController {
-  // Add the AuthService to the constructor. | Ajouter AuthService au constructeur.
   constructor(private readonly authService: AuthService) {}
 
-  // Add the register() method to the AuthController class. | Ajouter la méthode register() à la classe
+  // ---------- Register ----------
   @Post('register')
-  async register(@Body() registerDto: RegisterDto, @Req() req: Request) {
+  async register(@Body() registerDto: RegisterDto): Promise<AuthResponse> {
     try {
       const user = await this.authService.register(registerDto);
-  
-      if (!user) {
-        return { message: 'Un compte existe déjà avec cette adresse mail.' };
-      }
-  
 
-  
-      req.session.user = { id: user.id, email: user.email, id_role: user.id_role ?? '67c8621008049ddd39d069f1' } as SessionUser;
-  
-      return { message: 'Inscription réussie', user: req.session.user };
+      if (!user) {
+        return { success: false, message: 'Un compte existe déjà avec cette adresse mail.' };
+      }
+
+      // Générer le token immédiatement après inscription
+      const token = await this.authService.generateJwt({
+        id: user.id,
+        email: user.email,
+        id_role: user.id_role ?? '67c8621008049ddd39d069f1',
+        role: user.role ?? 'student',
+      });
+
+      return {
+        success: true,
+        message: 'Inscription réussie',
+        token,
+        user: {
+          id: user.id,
+          email: user.email,
+          id_role: user.id_role,
+          role: user.role,
+        },
+      };
     } catch (error) {
       if (error.message === 'Code de sécurité invalide pour les professeurs.') {
-        return { message: 'Le code prof n\'est pas valide.' };
+        return { success: false, message: 'Le code prof n\'est pas valide.' };
       }
-      // Gérer d'autres erreurs potentielles ici
-      return { message: 'Une erreur est survenue lors de l\'inscription.' };
+      throw new HttpException(
+        { success: false, message: 'Erreur lors de l\'inscription', error: error.message },
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
   }
-  
 
-
-  // Méthode pour vérifier si le code est correct
+  // ---------- Vérification du code ----------
   @Post('verifyCode')
   async verifyCode(@Body() { code }: { code: number }) {
     const isValid = await this.authService.isCodeValid(code);
 
-    if (isValid) {
-      return { message: 'Le code est correct.' };
-    } else {
-      return { message: 'Le code est incorrect.' };
-    }
+    return {
+      success: isValid,
+      message: isValid ? 'Le code est correct.' : 'Le code est incorrect.',
+    };
   }
 
- @Post('login')
- async login(@Body() loginDto: LoginDto, @Req() req: Request) {
-  try {
-    const { email, password } = loginDto;
+  // ---------- Login ----------
+  @Post('login')
+  async login(@Body() loginDto: LoginDto): Promise<AuthResponse> {
+    try {
+      const { email, password } = loginDto;
 
-    // Call the authentication service
-    const { user, role } = await this.authService.login(email, password);
+      const { user, role } = await this.authService.login(email, password);
 
-    // If user not found
-    if (!user) {
+      if (!user) {
+        throw new HttpException(
+          { success: false, message: 'Identifiants incorrects' },
+          HttpStatus.UNAUTHORIZED,
+        );
+      }
+
+      const token = await this.authService.generateJwt({
+        id: user._id,
+        email: user.email,
+        id_role: user.id_role,
+        role,
+      });
+
+      return {
+        success: true,
+        message: 'Connexion réussie',
+        token,
+        user: {
+          id: user._id,
+          email: user.email,
+          id_role: user.id_role,
+          role,
+        },
+      };
+    } catch (error) {
+      if (error instanceof HttpException) throw error;
+
       throw new HttpException(
-        { success: false, message: 'Identifiants incorrects' },
-        HttpStatus.UNAUTHORIZED,
+        { success: false, message: 'Erreur lors de la connexion', error: error.message },
+        HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
-
-    // Store user info in session
-    req.session.user = {
-      id: user._id,
-      email: user.email,
-      id_role: user.id_role,
-      role: role,
-    } as SessionUser;
-
-    return {
-      success: true,
-      message: 'Connexion réussie',
-      user: req.session.user,
-    };
-
-  } catch (error) {
-    // If it's already an HttpException, just rethrow
-    if (error instanceof HttpException) {
-      throw error;
-    }
-
-    // Otherwise, return a generic server error
-    throw new HttpException(
-      { success: false, message: 'Erreur lors de la connexion', error: error.message },
-      HttpStatus.INTERNAL_SERVER_ERROR,
-    );
   }
-}
 
-  // Add the logout() method to the AuthController class. | Ajouter la méthode logout() à la classe AuthController.
+  // ---------- Logout ----------
+  // ⚠️ Avec JWT, pas de vraie déconnexion côté serveur.
+  // On se contente de dire au client de supprimer son token.
   @Post('logout')
-  logout(@Req() req: Request) {
-    (req.session as any).destroy((err: any) => {
-      if (err) {
-        return { message: 'Erreur lors de la déconnexion', error: err };
-      }
-      return { message: 'Déconnexion réussie' };
-    });
+  logout(): AuthResponse {
+    return { success: true, message: 'Déconnexion réussie (supprimez simplement le token côté client)' };
+  }
+
+  // ---------- Exemple de route protégée ----------
+  @UseGuards(JwtAuthGuard)
+  @Get('profile')
+  getProfile(@Req() req): any {
+    return { success: true, user: req.user };
   }
 }
