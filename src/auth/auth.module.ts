@@ -5,10 +5,16 @@ import { AuthController } from './auth.controller';
 import { User, UserSchema } from '../schemas/user.schema';
 import { Code_prof, CodeProfSchema } from '../schemas/code_prof.schema';
 import { AuthGuard } from '../guards/auth.guard';
+import { JwtModule } from '@nestjs/jwt';
 
 @Module({
   // Add the MongooseModule.forFeature() method to the imports array to import the User model. | Pour importer le modèle User, on ajoute la méthode MongooseModule.forFeature() au tableau des imports.
   imports: [
+     JwtModule.register({
+      global: true,
+      secret: process.env.JWT_SECRET || 'secret_key',
+      signOptions: { expiresIn: '1h' },
+    }),
     MongooseModule.forFeature([
       { name: User.name, schema: UserSchema },
       { name: Code_prof.name, schema: CodeProfSchema },
