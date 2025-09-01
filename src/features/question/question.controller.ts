@@ -8,7 +8,6 @@ export class QuestionController {
   constructor(private readonly questionService: QuestionService) {}
 
   @Get('quiz/:quizId')
-  @UseGuards(AuthGuard)
   async findQuestionsByQuiz(@Param('quizId') quizId: string) {
     return this.questionService.findQuestionsByQuiz(quizId);
   }

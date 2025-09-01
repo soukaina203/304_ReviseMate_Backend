@@ -18,14 +18,12 @@ export class RevisionController {
 
   // Ajouter une route pour générer une fiche de révision à partir d'un texte
   @Post()
-  @UseGuards(AuthGuard)
   async getRevisionSheet(@Body('text') text: string, @Body('customPrompt') customPrompt?: string) {
     return { revisionSheet: await this.summaryService.createRevisionSheet(text, customPrompt) };
   }
 
   // Ajouter une route pour générer une fiche de révision à partir d'un fichier PDF
   @Post('pdf')
-  @UseGuards(AuthGuard)
   @UseInterceptors(FileInterceptor('file'))
   async getRevisionSheetFromPdf(@UploadedFile() file: any, @Body('customPrompt') customPrompt?: string) {
     // Vérifier si un fichier a été fourni

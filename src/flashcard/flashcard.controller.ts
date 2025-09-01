@@ -2,15 +2,12 @@ import { Controller, Body, Post, UploadedFile, UseInterceptors, BadRequestExcept
 import { FileInterceptor } from '@nestjs/platform-express';
 import * as pdfParse from 'pdf-parse';
 import { FlashcardService } from './flashcard.service';
-import { AuthGuard } from '../guards/auth.guard';
-import { UseGuards } from '@nestjs/common';
 
 
 @Controller('flashcard')
 export class FlashcardController {constructor(private readonly flashcardService: FlashcardService) {}
 
 @Post('')
- @UseGuards(AuthGuard)
 async generateFlashcards(@Body() { content }: { content: string }) {
   try {
     // Appel au service pour générer la carte mémoire
@@ -22,7 +19,6 @@ async generateFlashcards(@Body() { content }: { content: string }) {
 }
 // Ajouter une route pour générer des cartes mémoire à partir d'un fichier PDF
 @Post('pdf')
- @UseGuards(AuthGuard)
   @UseInterceptors(FileInterceptor('file'))
   async generateFlashcardsFromPdf(@UploadedFile() file: Express.Multer.File) {
     try {

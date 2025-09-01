@@ -13,14 +13,11 @@ export class UserController {
 
   // Update a user | Mettre à jour un utilisateur
   @Put(':id')
-  @UseGuards(AuthGuard)
   async update(@Param('id') id: string, @Body() updateUserDto: Update_userDto): Promise<User> {
     return this.userService.update(id, updateUserDto);
   }
 
   @Get('etudiants/details')
-  @UseGuards(AuthGuard, RoleGuard)  
-  @Roles('professeur', 'admin')
   async getAllEtudiantsWithDetails() {
     return this.userService.getAllEtudiantsWithDetails();
   }
